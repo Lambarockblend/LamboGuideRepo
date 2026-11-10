@@ -105,6 +105,7 @@ class App:
         self.lang = tk.StringVar(value="TR")
         self.effort = tk.StringVar(value="Orta")
         self.model = tk.StringVar(value=P.MODEL_CHOICES[0])
+        self.refused_models: set[str] = set()
         self.link = None
         self.link_lock = threading.Lock()
         self.mb_seen: set[int] = set()
@@ -320,7 +321,7 @@ class App:
         work = DATA / "empty-workspace"
         work.mkdir(parents=True, exist_ok=True)
         args = [self.codex, "exec", "--json", "--ignore-user-config", "--skip-git-repo-check", "-C", str(work), "--sandbox", "read-only",
-                "--disable", "shell_tool", "--model", self.model.get(), "-c", 'model_reasoning_effort="low"', "-"]
+                "--disable", "shell_tool", *self._model_args(self.model.get()), "-c", 'model_reasoning_effort="low"', "-"]
         try:
             p = subprocess.run(args, input=prompt, capture_output=True, text=True, encoding="utf-8", errors="replace",
                                timeout=timeout, cwd=str(work), creationflags=NOWIN)
@@ -403,11 +404,18 @@ class App:
         return (f"LamboGuide bağlantısı tamam. Karakter: {g('Name')}, {g('Class')}, seviye {g('Level')}. Bölge: {g('Zone')}, koordinat {g('Coordinates')}. "
                 "Harf testi: ğ ü ş ı ö ç Ğ Ü Ş İ Ö Ç. Bunu oyunda okuyabiliyorsan cevap yolu çalışıyor.")
 
+    def _model_args(self, model: str) -> list[str]:
+        """No --model for "auto" or for a model this account was already refused: Codex then picks an allowed one."""
+        if not model or model == "auto" or model in self.refused_models:
+            return []
+        return ["--model", model]
+
     def _codex_args(self, job, work, minimal):
         if minimal:
             return [self.codex, "exec", "--skip-git-repo-check", "-C", str(work), "-c", 'web_search="live"', "-"]
         return [self.codex, "exec", "--json", "--ignore-user-config", "--skip-git-repo-check", "-C", str(work), "--sandbox", "read-only",
-                "--disable", "shell_tool", "--model", job["model"], "-c", 'web_search="live"', "-c", f'model_reasoning_effort="{job["effort"]}"', "-"]
+                "--disable", "shell_tool", *self._model_args(job["model"]), "-c", 'web_search="live"',
+                "-c", f'model_reasoning_effort="{job["effort"]}"', "-"]
 
     @staticmethod
     def _parse_json_events(text: str) -> str:
@@ -442,12 +450,25 @@ class App:
         prompt = (f"{SYSTEM}\n\nAnswer language: {job['language']}. Reasoning effort: {job['effort']}.\n\nPlayer question:\n{job['question']}\n\n"
                   f"{job['context'][:9000]}\n\n{notes}\n\nUse the library notes first when they answer the question; use live web search for current or version-specific claims and include real source URLs. Do not run shell commands or inspect local files.")
         err = ""
-        for minimal in (False, True):
+        started = time.time()
+        plan = [False, True]                              # full call, then a bare fallback
+        while plan:
+            minimal = plan.pop(0)
             try:
                 p = subprocess.run(self._codex_args(job, work, minimal), input=prompt, capture_output=True, text=True, encoding="utf-8",
                                    errors="replace", timeout=300, cwd=str(work), creationflags=NOWIN)
-                answer = (p.stdout.strip() if minimal else self._parse_json_events(p.stdout))
+                try:
+                    answer = (p.stdout.strip() if minimal else self._parse_json_events(p.stdout))
+                except RuntimeError as exc:
+                    if "not supported when using Codex" in str(exc) and self._model_args(job["model"]):
+                        self.refused_models.add(job["model"])        # remember: never pay for this failed try again
+                        log(f"codex: model {job['model']} refused for this account, using Codex's own default from now on")
+                        self.q.put(("meta", f"Bu ChatGPT hesabı {job['model']} modelini kullanamıyor; otomatik modele geçildi."))
+                        plan.insert(0, False)                        # same full call again, now without --model
+                        continue
+                    raise
                 if p.returncode == 0 and answer:
+                    log(f"codex: answered in {time.time() - started:.0f}s (model={job['model']}, effort={job['effort']}, minimal={minimal})")
                     self.q.put(("answer", (job, answer)))
                     return
                 err = (p.stderr.strip() or p.stdout.strip() or f"Codex çıkış kodu {p.returncode}")[-1500:]
@@ -556,6 +577,8 @@ class App:
                     return
                 elif kind == "mailbox":
                     self._mailbox_message(val)
+                elif kind == "meta":
+                    self._meta(val)
                 elif kind == "answer":
                     self._finish(val[0], val[1])
                 elif kind == "error":

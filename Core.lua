@@ -18,7 +18,7 @@ local TEXT = {
         welcome="Karakterini, görevlerini veya çantandaki bir eşyayı sor. Bir eşyayı sormak için soru kutusuna tıkla ve eşyaya Shift+tıkla. Cevap hazır olunca kendiliğinden gelir.",
         settings="Ayarlar", popout="Sohbeti ayrı pencerede aç", language="Dil", poppedNote="Sohbet ayrı pencerede.", dock="Sohbeti geri getir", new_="Yeni sohbet",
         placeholder="Sorunu yaz ve Enter'a bas...", sending="Soru yardımcıya iletiliyor...",
-        sentWait="Soru gönderildi. Cevap hazır olunca kendiliğinden gelir.", helperOff="Soru iletilemedi: yardımcı program açık değil. Yardımcıyı aç (saatin yanındaki LG simgesi), sonra tekrar sor.", noLink="Yardımcı programa bağlanılamadı. LamboGuide kurulumunu çalıştır, yardımcı açıkken oyunu bir kez tamamen kapatıp aç.",
+        sentWait="Soru gönderildi. Cevap hazır olunca kendiliğinden gelir.", thinkingNow="Düşünüyor", helperOff="Soru iletilemedi: yardımcı program açık değil. Yardımcıyı aç (saatin yanındaki LG simgesi), sonra tekrar sor.", noLink="Yardımcı programa bağlanılamadı. LamboGuide kurulumunu çalıştır, yardımcı açıkken oyunu bir kez tamamen kapatıp aç.",
         replyOk="Cevap alındı.", busy="Önceki soru hâlâ iletiliyor, bekle.",
         hint="Yardımcı uygulama açık olmalı (saatin yanındaki LG simgesi).",
         status_idle="Hazır", status_tx="İletiliyor", status_wait="Cevap bekleniyor", status_ok="Cevap alındı", status_link="Yardımcı bağlı", status_nolink="Yardımcı bağlı değil", onMap="Haritada", inventory="Envanter", addonsRow="Önerilen addonlar", askLevelUp="Yeni seviyemde eğitmenden ne öğrenmeliyim, yetenek puanımı nereye vermeliyim ve sıradaki hedefim ne olmalı?", askDungeon="%s için kısa rehber: bosslar ve dikkat edilecekler, zindanın görevleri, karakterime uygun önemli ganimetler.", wpSet="Haritaya işaret kondu (M ile bak), ok yolu gösteriyor.", wpFail="Bu yere işaret konamadı.", hoverKey="Fare altını sor", none="Yok", pressKey="Bir tuşa bas (Esc: kaldır)", hoverNone="Fare bir eşyanın, büyünün veya birimin üstünde değil.", hoverAsk="Bu %s hakkında bilgi ver: karakterim için işe yarar mı, ne yapmalıyım?", hoverShow="Fare altı: %s", combatWait="Savaştan sonra tekrar dene.",
@@ -38,7 +38,7 @@ local TEXT = {
         welcome="Ask about your character, quests or an item in your bags. To ask about an item, click the input box and Shift+click the item. The answer arrives by itself when ready.",
         settings="Settings", popout="Open chat in its own window", language="Language", poppedNote="Chat is in its own window.", dock="Bring chat back", new_="New chat",
         placeholder="Type your question and press Enter...", sending="Sending question to the helper...",
-        sentWait="Question sent. The answer arrives by itself when ready.", helperOff="The question could not be sent: the helper app is not running. Start it (LG icon next to the clock), then ask again.", noLink="No link to the helper app. Run the LamboGuide installer, then fully restart the game once while the helper is running.",
+        sentWait="Question sent. The answer arrives by itself when ready.", thinkingNow="Thinking", helperOff="The question could not be sent: the helper app is not running. Start it (LG icon next to the clock), then ask again.", noLink="No link to the helper app. Run the LamboGuide installer, then fully restart the game once while the helper is running.",
         replyOk="Answer received.", busy="The previous question is still being sent, please wait.",
         hint="The helper app must be running (LG icon next to the clock).",
         status_idle="Ready", status_tx="Sending", status_wait="Waiting for answer", status_ok="Answer received", status_link="Helper connected", status_nolink="Helper not connected", onMap="On map", inventory="Inventory", addonsRow="Recommended addons", askLevelUp="At my new level, what should I learn from the trainer, where should my talent points go and what should I do next?", askDungeon="Short guide for %s: bosses and what to watch for, the dungeon quests, and important loot for my character.", wpSet="Map marker set (press M), the arrow shows the way.", wpFail="Could not mark this place.", hoverKey="Ask hovered", none="None", pressKey="Press a key (Esc: remove)", hoverNone="The mouse is not over an item, spell or unit.", hoverAsk="Tell me about this %s: is it useful for my character, what should I do?", hoverShow="Hovered: %s", combatWait="Try again after combat.",
@@ -73,8 +73,10 @@ local function Tx(key) return Disp(T(key)) end
 
 ---------------------------------------------------------------- small helpers
 local C = { gold="|cffffd36a", cyan="|cff72d9e8", muted="|cffb9b0a0", green="|cff7fe27c", red="|cffff7777", link="|cff5aa9ff", reset="|r" }
-local MODEL_IDS = {"gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna"}
-local MODEL_LABELS = { ["gpt-6.1-sol"]="GPT-6.1 Sol", ["gpt-6.1-terra"]="GPT-6.1 Terra", ["gpt-6-luna"]="GPT-6 Luna" }
+-- "auto": the helper passes no model, so Codex uses the one the player's ChatGPT plan allows. A fixed model that the
+-- plan does not include is refused by Codex ("not supported when using Codex with a ChatGPT account", in game 2026-11-11).
+local MODEL_IDS = {"auto", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna"}
+local MODEL_LABELS = { ["auto"]="Auto", ["gpt-6.1-sol"]="GPT-6.1 Sol", ["gpt-6.1-terra"]="GPT-6.1 Terra", ["gpt-6-luna"]="GPT-6 Luna" }
 local EFFORTS = {"low", "medium", "high"}
 
 local function Size(f, w, h)
@@ -319,6 +321,22 @@ SetStatus = function(key, extra)
 end
 
 ---------------------------------------------------------------- sending
+-- While a question is on its way or being answered, the last row shows "Düşünüyor" with dots that grow and
+-- shrink (1 2 3 3 2 1), like a typing indicator. The stored text stays the plain wait text.
+local thinkFS, thinkAt, thinkStep = nil, 0, 0
+local THINK_DOTS = { 1, 2, 3, 3, 2, 1 }
+local function IsWaitText(t)
+    return t == TEXT.tr.sending or t == TEXT.tr.sentWait or t == TEXT.en.sending or t == TEXT.en.sentWait
+end
+local function ThinkingText()
+    return Disp(C.gold .. T("thinkingNow") .. C.reset .. " " .. string.rep(".", THINK_DOTS[thinkStep % #THINK_DOTS + 1]))
+end
+local function ThinkingTick(now)
+    if not thinkFS or (now - thinkAt) < 0.35 then return end
+    thinkAt, thinkStep = now, thinkStep + 1
+    thinkFS:SetText(ThinkingText())
+end
+
 local function SendHello()
     MBX.Send("H1 zip=" .. ((C_EncodingUtil and C_EncodingUtil.DecompressString) and "1" or "0"))
 end
@@ -340,7 +358,11 @@ end
 do
     local watch = CreateFrame and CreateFrame("Frame")
     if watch and watch.SetScript then
-        watch:SetScript("OnUpdate", function() if txReq and GetTime then DeliveryWatch(GetTime()) end end)
+        watch:SetScript("OnUpdate", function()
+            if not GetTime then return end
+            if txReq then DeliveryWatch(GetTime()) end
+            if thinkFS then ThinkingTick(GetTime()) end
+        end)
     end
 end
 
@@ -624,6 +646,7 @@ RenderChat = function()
     if #msgs == 0 then list = { { role = "assistant", text = T("welcome") } } end
     local w = math.max(150, (chatScroll:GetWidth() or 300) - 4)
     local y = 4
+    thinkFS = nil
     for i, msg in ipairs(list) do
         local row = chatRows[i]
         if not row then row = MakeRow(); chatRows[i] = row end
@@ -640,7 +663,11 @@ RenderChat = function()
             Color(row.bg, 0.15, 0.11, 0.07, 0.97); row.author:SetTextColor(1, 0.83, 0.42, 1); row.body:SetTextColor(0.96, 0.93, 0.86, 1)
             row.author:SetText("LamboGuide")
             row.icon:SetTexture(ICON.assistant); row.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-            row.body:SetText(Disp(FmtReply(msg.text or "")))
+            if i == #list and IsWaitText(msg.text) and (txReq or DB.awaitingReq) then
+                thinkFS = row.body; row.body:SetText(ThinkingText())
+            else
+                row.body:SetText(Disp(FmtReply(msg.text or "")))
+            end
         end
         local extra = LinkButtons(row, msg.role == "user" and {} or ReplyLinks(msg.text), w - 52)
         local h = math.max(46, (row.author:GetStringHeight() or 14) + (row.body:GetStringHeight() or 16) + 22 + extra)
@@ -826,7 +853,10 @@ local function CreateChatPanel(parent)
     inputBox:SetAutoFocus(false); inputBox:SetMaxLetters(6000)
     inputBox:SetScript("OnEnterPressed", function() SendQuestion() end)
     inputBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
-    local send = MakeButton(chatPanel, "send", 78, 26, function() SendQuestion() end, 12); send:SetPoint("BOTTOMRIGHT", chatPanel, "BOTTOMRIGHT", -2, 32)
+    local send = MakeButton(chatPanel, nil, 78, 26, function() SendQuestion() end, 12); send:SetPoint("BOTTOMRIGHT", chatPanel, "BOTTOMRIGHT", -2, 32)
+    send:SetText("")
+    local sendLabel = send:CreateFontString(nil, "OVERLAY", "GameFontNormal"); sendLabel:SetPoint("CENTER", send, "CENTER", 0, 0)
+    sendLabel:SetTextColor(1, 0.82, 0.2, 1); Reg(sendLabel, "send", false, 12)
     statusDot = chatPanel:CreateTexture(nil, "OVERLAY"); Size(statusDot, 8, 8); statusDot:SetPoint("BOTTOMLEFT", chatPanel, "BOTTOMLEFT", 8, 12); Color(statusDot, 0.5, 0.5, 0.5, 1)
     statusText = chatPanel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall"); statusText:SetPoint("LEFT", statusDot, "RIGHT", 6, 0)
 end
@@ -1040,6 +1070,9 @@ events:SetScript("OnEvent", function(_, event)
     if event == "PLAYER_LOGIN" then
         DB = LamboGuideDB
         DB.language = DB.language or "tr"; DB.effort = DB.effort or 2; DB.model = DB.model or MODEL_IDS[1]
+        if (DB.settingsVer or 0) < 2 then           -- 0.7.2: the old default (a fixed model, medium effort) was slow or refused
+            DB.settingsVer = 2; DB.model = "auto"; DB.effort = 1
+        end
         DB.request = tonumber(DB.request) or 0
         DB.ascii = false
         DB.messages = nil                                    -- v0.3 leftovers
@@ -1125,4 +1158,4 @@ events:SetScript("OnEvent", function(_, event)
     end
 end)
 
-LamboGuideTest = { Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, DeliveryWatch = function(...) return DeliveryWatch(...) end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }
+LamboGuideTest = { Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, DeliveryWatch = function(...) return DeliveryWatch(...) end, ThinkingTick = function(now) ThinkingTick(now); return thinkFS and thinkFS:GetText() end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }

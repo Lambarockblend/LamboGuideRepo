@@ -2,7 +2,7 @@
 ; Installs the helper, then the helper installs the addon, its link folders, Questie (optional)
 ; and Windows autostart. No admin rights needed.
 #ifndef MyVersion
-  #define MyVersion "0.7.1"
+  #define MyVersion "0.7.2"
 #endif
 
 [Setup]

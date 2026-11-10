@@ -11,7 +11,8 @@ msg = ("LG2 lang=Turkish; effort=medium; model=gpt-6.1-sol; kind=ask\nQuestion: 
 d = P.parse_game_prompt(msg)
 assert d["question"] == "Su an neredeyim? ğüşıöç" and d["kind"] == "ask" and d["language"] == "Turkish"
 assert d["context"].startswith("WoW Forever live character data") and d["model"] == "gpt-6.1-sol"
-assert P.parse_game_prompt("LG2 lang=English; effort=high; model=evil; kind=ping\nQuestion: ping")["model"] == P.MODEL_CHOICES[0]
+assert P.parse_game_prompt("LG2 lang=English; effort=high; model=evil; kind=ping\nQuestion: ping")["model"] == "auto" == P.MODEL_CHOICES[0]
+assert P.parse_game_prompt("LG2 lang=Turkish; effort=low; model=auto; kind=ask\nQuestion: x")["model"] == "auto"
 
 # markdown out, links kept as {url:..;label}, sentence punctuation stays outside the link
 t = P.to_mailbox_text("**Merhaba** [Wowhead](https://www.wowhead.com/x) ve https://a.io/y.\n\n\n# Baslik\n- madde")

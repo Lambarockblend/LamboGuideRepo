@@ -1,5 +1,5 @@
 # Builds LamboGuide-Setup-<version>.exe and the CurseForge addon zip on a Windows runner.
-# Trigger: push a tag like v0.7.1 (or run it by hand from the Actions tab).
+# Trigger: push a tag like v0.7.2 (or run it by hand from the Actions tab).
 name: release
 on:
   push:

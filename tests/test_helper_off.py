@@ -127,6 +127,17 @@ assert tick(30, link, lambda: any(t.startswith("Q") for t in got)), got
 qs = [t for t in got if t.startswith("Q")]
 assert len(qs) == 1 and "yeni soru" in qs[0] and "ilk soru" not in qs[0], qs
 req = qs[0].split("\n", 1)[0][1:]
+# while the answer is awaited the last row shows "Düşünüyor" with dots 1 2 3 3 2 1 (stored text stays the wait text)
+assert "model=auto" in qs[0] and "effort=low" in qs[0], qs[0][:80]
+tick(1, link)
+seen = []
+for k in range(7):
+    clock[0] += 0.4
+    seen.append(lua.eval("LamboGuideTest.ThinkingTick")(clock[0]))
+assert all("Düşünüyor" in t for t in seen), seen
+assert [t.count(".") for t in seen[:6]] in ([1, 2, 3, 3, 2, 1], [2, 3, 3, 2, 1, 1], [3, 3, 2, 1, 1, 2], [3, 2, 1, 1, 2, 3], [2, 1, 1, 2, 3, 3], [1, 1, 2, 3, 3, 2]), seen
+assert lua.eval(last) in ("Soru gönderildi. Cevap hazır olunca kendiliğinden gelir.", "Soru yardımcıya iletiliyor..."), lua.eval(last)
 link.send(f"A{req}\ntamam")
 assert tick(20, link, lambda: lua.eval(last) == "tamam"), lua.eval(last)
-print("helper-off timeout OK")
+assert lua.eval("LamboGuideTest.ThinkingTick")(clock[0] + 1) is None      # animation stops with the answer
+print("helper-off timeout + thinking dots OK")

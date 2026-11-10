@@ -6,7 +6,10 @@ import re
 from urllib.parse import urlparse
 
 # ---------------------------------------------------------------- prompt / reply helpers
-MODEL_CHOICES = ("gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna")
+# "auto" = pass no model: Codex then uses the model the player's ChatGPT plan allows. The named ids are the ones
+# OpenAI lists for Codex (learn.chatgpt.com/docs/models, checked 2026-11-11); which of them an account may use
+# depends on its plan, and Codex refuses the others.
+MODEL_CHOICES = ("auto", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna")
 
 
 def parse_game_prompt(payload: str):
