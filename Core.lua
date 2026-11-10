@@ -447,7 +447,7 @@ local function SendQuestion(text, shown, kind, extra)
                 if price then d = (d and (d .. " | ") or "") .. "prices: " .. price end
                 local gearLine = LamboGuideGear and SafeCall(LamboGuideGear.AiLine, link)
                 if gearLine then d = (d and (d .. " | ") or "") .. gearLine end
-                if d and #details < 3 then details[#details + 1] = Clean(d) end
+                if d and #details < 4 then details[#details + 1] = Utf8Prefix(Clean(d), 420) end
             end
         end
         if #details > 0 then extra = (extra and (extra .. " || ") or "") .. "Item tooltip: " .. table.concat(details, " || ") end
@@ -455,7 +455,7 @@ local function SendQuestion(text, shown, kind, extra)
     text = text:gsub("|c%x%x%x%x%x%x%x%x|H.-|h(%[.-%])|h|r", "%1"):gsub("|H.-|h(%[.-%])|h", "%1")
     if next(hoverTags) then
         local more = {}
-        for tag, info in pairs(hoverTags) do if text:find(tag, 1, true) and #more < 3 then more[#more + 1] = info end end
+        for tag, info in pairs(hoverTags) do if text:find(tag, 1, true) and #more < 4 then more[#more + 1] = Utf8Prefix(info, 420) end end
         if #more > 0 then extra = (extra and (extra .. " || ") or "") .. table.concat(more, " || ") end
         hoverTags, hoverSkip = {}, {}
     end
@@ -465,7 +465,7 @@ local function SendQuestion(text, shown, kind, extra)
     AddUserMessage(text, shown)
     if inputBox then inputBox:SetText(""); inputBox:ClearFocus() end
     SelectTab("chat")
-    BeginTransmit(text, kind, extra and Utf8Prefix(extra, 900))
+    BeginTransmit(text, kind, extra and Utf8Prefix(extra, 1800))
 end
 
 local function HandleReply(raw)

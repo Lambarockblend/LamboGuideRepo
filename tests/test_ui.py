@@ -132,6 +132,11 @@ lua.execute("INPUT:SetText(''); GameTooltip:Show(); LamboGuide_AskHovered()")
 assert "Linen Cap" in lua.eval("INPUT:GetText()")
 assert lua.eval("LamboGuideDB.awaitingReq") is None
 
+# several links at once (comparison): both stay in the box
+lua.execute("INPUT:SetText(''); INPUT._focus = false")
+lua.execute("HOOKS.ChatEdit_InsertLink('|Hitem:2123|h[Linen Cap]|h'); HOOKS.ChatEdit_InsertLink('|Hitem:2124|h[Cloth Hood]|h')")
+assert "Linen Cap" in lua.eval("INPUT:GetText()") and "Cloth Hood" in lua.eval("INPUT:GetText()")
+
 # keys the game already uses are refused, free ones are fine
 assert T.KeyTaken("W") == "MOVEFORWARD" and T.KeyTaken("S") == "MOVEFORWARD"
 assert T.KeyTaken("ALT-Q") is None
