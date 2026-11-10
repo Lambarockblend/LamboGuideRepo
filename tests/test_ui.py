@@ -159,4 +159,14 @@ n = T.HandleQuestDesc("Tabii: \n1|Matriarch'tan 3 kristal topla.\nbaska satir")
 assert n == 1 and "Matriarch'tan 3 kristal topla." in T.QuestText(), T.QuestText()
 lua.execute('LamboGuideDB.language = "en"')
 assert "Collect 3 crystals from the matriarch." in T.QuestText(), T.QuestText()
+# patch notes: own tab, nothing written into the chat
+tick(25)
+lua.execute("LamboGuideDB.awaitingReq = nil")
+msgs = lua.eval("#LamboGuideDB.chats[LamboGuideDB.currentChat].messages")
+T.RequestPatch()
+assert lua.eval("LamboGuideDB.silentKind") == "patch"
+assert lua.eval("#LamboGuideDB.chats[LamboGuideDB.currentChat].messages") == msgs, "patch question must not enter the chat"
+T.HandlePatch("**12 Kasim**: Warrior dengesi {url:https://example.com/p;Kaynak}")
+txt = T.PatchText()
+assert "12 Kasim" in txt and "Kaynak" in txt and "{url" not in txt, txt
 print("ui 0.7.3 OK")
