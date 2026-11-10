@@ -8,6 +8,13 @@
 
 LamboGuideExtras = LamboGuideExtras or {}
 local X = LamboGuideExtras
+-- Blizzard's default fonts have no Turkish letters (boxes for s, g, i with marks): our own window texts use DejaVu
+local FONT = "Interface\\AddOns\\LamboGuide\\DejaVuSans.ttf"
+local function Font(fs, size)
+    if fs and fs.SetFont then pcall(fs.SetFont, fs, FONT, size or 12, "") end
+    return fs
+end
+X.Font = Font
 
 local TEXT = {
     tr = {
@@ -401,8 +408,8 @@ function X.ShowArrow()
     arrow:SetScript("OnLeave", function() GameTooltip:Hide() end)
     arrow.tex = arrow:CreateTexture(nil, "ARTWORK"); arrow.tex:SetSize(42, 42); arrow.tex:SetPoint("TOP", 0, 0)
     arrow.tex:SetTexture("Interface\\Minimap\\MinimapArrow")
-    arrow.text = arrow:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall"); arrow.text:SetPoint("TOP", arrow.tex, "BOTTOM", 0, -2)
-    arrow.label = arrow:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall"); arrow.label:SetPoint("TOP", arrow.text, "BOTTOM", 0, -1)
+    arrow.text = arrow:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall"); arrow.text:SetPoint("TOP", arrow.tex, "BOTTOM", 0, -2); Font(arrow.text, 11)
+    arrow.label = arrow:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall"); arrow.label:SetPoint("TOP", arrow.text, "BOTTOM", 0, -1); Font(arrow.label, 11)
     arrow.t = 0
     arrow:SetScript("OnUpdate", function(self, elapsed)
         self.t = self.t + elapsed
@@ -465,12 +472,12 @@ function X.ShowAddons()
     addonsWin = f
     f:SetSize(380, 74 + #X.RECOMMENDED * 62); f:SetPoint("CENTER"); f:SetFrameStrata("DIALOG")
     f:SetMovable(true); f:EnableMouse(true); f:RegisterForDrag("LeftButton"); f:SetScript("OnDragStart", f.StartMoving); f:SetScript("OnDragStop", f.StopMovingOrSizing)
-    if type(f.TitleText) == "table" then f.TitleText:SetText(L("addonsTitle")) end
+    if type(f.TitleText) == "table" then Font(f.TitleText, 13); f.TitleText:SetText(L("addonsTitle")) end
     if UISpecialFrames then table.insert(UISpecialFrames, "LamboGuideAddonsFrame") end
     f.rows = {}
     for i, a in ipairs(X.RECOMMENDED) do
-        local name = f:CreateFontString(nil, "OVERLAY", "GameFontNormal"); name:SetPoint("TOPLEFT", 14, -32 - (i - 1) * 62); name:SetJustifyH("LEFT")
-        local note = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall"); note:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -2); note:SetWidth(350); note:SetJustifyH("LEFT")
+        local name = f:CreateFontString(nil, "OVERLAY", "GameFontNormal"); name:SetPoint("TOPLEFT", 14, -32 - (i - 1) * 62); name:SetJustifyH("LEFT"); Font(name, 13)
+        local note = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall"); note:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -2); note:SetWidth(350); note:SetJustifyH("LEFT"); Font(note, 11)
         local box = CreateFrame("EditBox", nil, f, "InputBoxTemplate"); box:SetSize(340, 18); box:SetPoint("TOPLEFT", note, "BOTTOMLEFT", 4, -3); box:SetAutoFocus(false)
         box:SetText(a.url)
         box:SetScript("OnTextChanged", function(self) if self:GetText() ~= a.url then self:SetText(a.url); self:HighlightText() end end)
@@ -478,7 +485,7 @@ function X.ShowAddons()
         box:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
         f.rows[i] = { name = name, note = note }
     end
-    f.hint = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall"); f.hint:SetPoint("BOTTOMLEFT", 14, 12)
+    f.hint = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall"); f.hint:SetPoint("BOTTOMLEFT", 14, 12); Font(f.hint, 11)
     X.RefreshAddons()
     f:Show()
 end

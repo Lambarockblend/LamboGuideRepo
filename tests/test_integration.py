@@ -126,12 +126,22 @@ assert shown == answer, shown
 assert "Quest locations from QuestieDB" in q and "Terenthis @ Darkshore 39.2,43.5 {map=1439}" in q, q[-400:]
 assert "target: Moonstalker Matriarch @ Darkshore 50.1,30.3 {map=1439}" in q
 
-# hover hotkey: ask about the item under the mouse
+# hover hotkey: tags the item under the mouse in the input box, nothing is sent until the player writes his question
+before = sum(t.startswith("Q") for t in got)
 lua.execute('GameTooltip:Show(); LamboGuide_AskHovered()')
-assert run(30, lambda: sum(t.startswith("Q") for t in got) >= 2), "hover question not received"
+run(3)
+assert sum(t.startswith("Q") for t in got) == before, "hover key must not send a question by itself"
+boxtext = lua.eval("(function() for _, o in ipairs(__created()) do if o._kind == 'EditBox' and o._text and o._text:find('Linen Cap') then return o._text end end end)()")
+assert boxtext and "Linen Cap" in boxtext, boxtext
+lua.execute("""
+local input
+for _, o in ipairs(__created()) do if o._kind == "EditBox" and o._text and o._text:find("Linen Cap") then input = o end end
+input:SetText(input:GetText() .. "bu bana uyar mi?")
+input._scripts.OnEnterPressed(input)
+""")
+assert run(30, lambda: sum(t.startswith("Q") for t in got) > before), "tagged question not received"
 hq = [t for t in got if t.startswith("Q")][-1]
-assert "About: Hovered item:" in hq and "+3 Stamina" in hq, hq[:500]
-assert lua.eval("LamboGuideDB.chats[1].messages[3].text") == "Fare altı: Linen Cap"
+assert "About: Hovered item:" in hq and "+3 Stamina" in hq, hq[:600]
 link.send(f"A{int(re.match(r'Q(\d+)', hq).group(1))}\nAuberdine'de teslim et {{wp:1439,39.2,43.5,Terenthis}}.")
 assert run(30, lambda: lua.eval("LamboGuideDB.awaitingReq") is None), "hover answer"
 

@@ -486,6 +486,18 @@ function G.TooltipLine(tip, itemId)
     local text, r, g, b = G.Line(item)
     if not text then return false end
     tip:AddLine("LG: " .. text, r, g, b, true)
+    -- the tooltip's own font has no Turkish letters: give the new line ours, and fall back to plain ASCII if that fails
+    local name = tip.GetName and tip:GetName()
+    local fs = name and tip.NumLines and _G[name .. "TextLeft" .. tostring(tip:NumLines())]
+    if fs and fs.SetFont then
+        pcall(fs.SetFont, fs, "Interface\\AddOns\\LamboGuide\\DejaVuSans.ttf", 12, "")
+        local path = fs.GetFont and fs:GetFont()
+        if not (type(path) == "string" and path:lower():find("dejavusans", 1, true)) and fs.SetText then
+            local plain = "LG: " .. text
+            for a, b2 in pairs({ ["ı"] = "i", ["İ"] = "I", ["ğ"] = "g", ["Ğ"] = "G", ["ş"] = "s", ["Ş"] = "S", ["ç"] = "c", ["Ç"] = "C", ["ö"] = "o", ["Ö"] = "O", ["ü"] = "u", ["Ü"] = "U" }) do plain = plain:gsub(a, b2) end
+            fs:SetText(plain)
+        end
+    end
     return true
 end
 

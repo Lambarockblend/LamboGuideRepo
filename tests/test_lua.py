@@ -18,6 +18,10 @@ mt.__index = function(t, k)
   if numeric[k] then return function() return 40 end end
   if k == "GetText" then return function(self) return self._text end end
   if k == "SetText" then return function(self, s) self._text = s; local h = self._scripts.OnTextChanged; if h then h(self) end end end
+  if k == "Insert" then return function(self, s) self._text = (self._text or "") .. s end end
+  if k == "SetFocus" then return function(self) self._focus = true end end
+  if k == "ClearFocus" then return function(self) self._focus = false end end
+  if k == "HasFocus" then return function(self) return self._focus and true or false end end
   if k == "SetScript" then return function(self, n, f) self._scripts[n] = f end end
   if k == "IsShown" then return function(self) return self._shown end end
   if k == "Show" then return function(self) self._shown = true end end

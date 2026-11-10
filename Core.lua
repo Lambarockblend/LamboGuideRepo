@@ -21,7 +21,7 @@ local TEXT = {
         sentWait="Soru gönderildi. Cevap hazır olunca kendiliğinden gelir.", thinkingNow="Düşünüyor", helperOff="Soru iletilemedi: yardımcı program açık değil. Yardımcıyı aç (saatin yanındaki LG simgesi), sonra tekrar sor.", noLink="Yardımcı programa bağlanılamadı. LamboGuide kurulumunu çalıştır, yardımcı açıkken oyunu bir kez tamamen kapatıp aç.",
         replyOk="Cevap alındı.", busy="Önceki soru hâlâ iletiliyor, bekle.",
         hint="Yardımcı uygulama açık olmalı (saatin yanındaki LG simgesi).",
-        status_idle="Hazır", status_tx="İletiliyor", status_wait="Cevap bekleniyor", status_ok="Cevap alındı", status_link="Yardımcı bağlı", status_nolink="Yardımcı bağlı değil", onMap="Haritada", inventory="Envanter", addonsRow="Önerilen addonlar", askLevelUp="Yeni seviyemde eğitmenden ne öğrenmeliyim, yetenek puanımı nereye vermeliyim ve sıradaki hedefim ne olmalı?", askDungeon="%s için kısa rehber: bosslar ve dikkat edilecekler, zindanın görevleri, karakterime uygun önemli ganimetler.", wpSet="Haritaya işaret kondu (M ile bak), ok yolu gösteriyor.", wpFail="Bu yere işaret konamadı.", hoverKey="Fare altını sor", none="Yok", pressKey="Bir tuşa bas (Esc: kaldır)", hoverNone="Fare bir eşyanın, büyünün veya birimin üstünde değil.", hoverAsk="Bu %s hakkında bilgi ver: karakterim için işe yarar mı, ne yapmalıyım?", hoverShow="Fare altı: %s", combatWait="Savaştan sonra tekrar dene.",
+        status_idle="Hazır", status_tx="İletiliyor", status_wait="Cevap bekleniyor", status_ok="Cevap alındı", status_link="Yardımcı bağlı", status_nolink="Yardımcı bağlı değil", onMap="Haritada", inventory="Envanter", addonsRow="Önerilen addonlar", askLevelUp="Yeni seviyemde eğitmenden ne öğrenmeliyim, yetenek puanımı nereye vermeliyim ve sıradaki hedefim ne olmalı?", askDungeon="%s için kısa rehber: bosslar ve dikkat edilecekler, zindanın görevleri, karakterime uygun önemli ganimetler.", wpSet="Haritaya işaret kondu (M ile bak), ok yolu gösteriyor.", wpFail="Bu yere işaret konamadı.", hoverKey="Fare altını ekle", none="Yok", pressKey="Bir tuşa bas (Esc: kaldır)", keyTaken="Bu tuş oyunda zaten kullanılıyor (%s). Alt veya Ctrl ile birlikte bas, örnek: Alt+Q.", tagged="Sohbet kutusuna eklendi, sorunu yazıp gönder.", questDescBtn="Görev açıklamalarını getir", questDescWait="Açıklamalar bekleniyor…", questDescAsk="Aşağıdaki satırların her biri bir WoW görevi (numara|ad|hedef|oyun metni). Her görev için ne yapılacağını anlatan tek kısa Türkçe cümle yaz (en çok 14 kelime). Cevapta yalnızca görev başına bir satır olsun, şu biçimde: numara|cümle. Başka hiçbir şey yazma.", questDescFail="Açıklamalar okunamadı, tekrar dene.", hoverNone="Fare bir eşyanın, büyünün veya birimin üstünde değil.", hoverAsk="Bu %s hakkında bilgi ver: karakterim için işe yarar mı, ne yapmalıyım?", hoverShow="Fare altı: %s", combatWait="Savaştan sonra tekrar dene.",
         patchQuery="WoW: Forever resmi yama ve hotfix notlarını web'de ara. En yeni önce olacak şekilde tarih, başlık, değişiklik özeti ve kaynak bağlantılarını listele. Retail ve Classic Era ile karıştırma.",
         patchShow="Son yama notları", pingShow="Bağlantı testi",
         charTitle="KARAKTER", gear="GİYİLİ EŞYALAR", bags="ÇANTA", activeQuests="AKTİF GÖREVLER",
@@ -41,7 +41,7 @@ local TEXT = {
         sentWait="Question sent. The answer arrives by itself when ready.", thinkingNow="Thinking", helperOff="The question could not be sent: the helper app is not running. Start it (LG icon next to the clock), then ask again.", noLink="No link to the helper app. Run the LamboGuide installer, then fully restart the game once while the helper is running.",
         replyOk="Answer received.", busy="The previous question is still being sent, please wait.",
         hint="The helper app must be running (LG icon next to the clock).",
-        status_idle="Ready", status_tx="Sending", status_wait="Waiting for answer", status_ok="Answer received", status_link="Helper connected", status_nolink="Helper not connected", onMap="On map", inventory="Inventory", addonsRow="Recommended addons", askLevelUp="At my new level, what should I learn from the trainer, where should my talent points go and what should I do next?", askDungeon="Short guide for %s: bosses and what to watch for, the dungeon quests, and important loot for my character.", wpSet="Map marker set (press M), the arrow shows the way.", wpFail="Could not mark this place.", hoverKey="Ask hovered", none="None", pressKey="Press a key (Esc: remove)", hoverNone="The mouse is not over an item, spell or unit.", hoverAsk="Tell me about this %s: is it useful for my character, what should I do?", hoverShow="Hovered: %s", combatWait="Try again after combat.",
+        status_idle="Ready", status_tx="Sending", status_wait="Waiting for answer", status_ok="Answer received", status_link="Helper connected", status_nolink="Helper not connected", onMap="On map", inventory="Inventory", addonsRow="Recommended addons", askLevelUp="At my new level, what should I learn from the trainer, where should my talent points go and what should I do next?", askDungeon="Short guide for %s: bosses and what to watch for, the dungeon quests, and important loot for my character.", wpSet="Map marker set (press M), the arrow shows the way.", wpFail="Could not mark this place.", hoverKey="Tag hovered", none="None", pressKey="Press a key (Esc: remove)", keyTaken="That key is already used by the game (%s). Press it together with Alt or Ctrl, for example Alt+Q.", tagged="Added to the chat box, type your question and send.", questDescBtn="Get quest descriptions", questDescWait="Waiting for descriptions…", questDescAsk="Each line below is a WoW quest (number|name|objective|game text). For each quest write one short sentence about what to do (14 words at most). Answer with exactly one line per quest in the form: number|sentence. Write nothing else.", questDescFail="Could not read the descriptions, try again.", hoverNone="The mouse is not over an item, spell or unit.", hoverAsk="Tell me about this %s: is it useful for my character, what should I do?", hoverShow="Hovered: %s", combatWait="Try again after combat.",
         patchQuery="Search the web for official WoW: Forever patch and hotfix notes. List newest first with date, title, short change summary and source links. Do not mix in Retail or Classic Era.",
         patchShow="Latest patch notes", pingShow="Link test",
         charTitle="CHARACTER", gear="EQUIPPED ITEMS", bags="BAGS", activeQuests="ACTIVE QUESTS",
@@ -189,24 +189,38 @@ local function Bags()
     return out, used, total
 end
 
-local function Quests()
+local function FirstSentence(t, max)
+    t = Clean(t or ""):gsub("%s+", " "):gsub("^ ", ""):gsub(" $", "")
+    local first = t:match("^(.-[%.!%?])%s") or t
+    if #first > max then first = Utf8Prefix(first, max - 2) .. ".." end
+    return first
+end
+-- Active quests as { title, row, objective, game }: row = the list line, game = the game's own short text (client language)
+local function QuestEntries(withText)
     local out = {}
     if C_QuestLog and C_QuestLog.GetNumQuestLogEntries and C_QuestLog.GetInfo then
         local count = SafeCall(C_QuestLog.GetNumQuestLogEntries) or 0
         for i = 1, count do
             local info = SafeCall(C_QuestLog.GetInfo, i)
             if info and not info.isHeader and info.questID then
-                local row = (info.isComplete and "[DONE] " or "") .. Clean(info.title or ("Quest " .. info.questID))
+                local title = Clean(info.title or ("Quest " .. info.questID))
+                local row = (info.isComplete and "[DONE] " or "") .. title
                 local objs = C_QuestLog.GetQuestObjectives and SafeCall(C_QuestLog.GetQuestObjectives, info.questID)
+                local objective = ""
                 if type(objs) == "table" then
                     local p = {}
                     for _, o in ipairs(objs) do
-                        local s = Clean(o.text or "")
-                        if s ~= "" then p[#p + 1] = s end
+                        local s2 = Clean(o.text or "")
+                        if s2 ~= "" then p[#p + 1] = s2 end
                     end
-                    if #p > 0 then row = row .. " (" .. table.concat(p, "; ") .. ")" end
+                    if #p > 0 then objective = table.concat(p, "; "); row = row .. " (" .. objective .. ")" end
                 end
-                out[#out + 1] = row
+                local game = ""
+                if withText and GetQuestLogQuestText then
+                    local desc, obj = SafeCall(GetQuestLogQuestText, info.questLogIndex or i)
+                    game = FirstSentence((obj and obj ~= "" and obj) or desc or "", 110)
+                end
+                out[#out + 1] = { title = title, row = row, objective = objective, game = game }
             end
         end
     elseif GetNumQuestLogEntries and GetQuestLogTitle then
@@ -215,7 +229,9 @@ local function Quests()
         for i = 1, count do
             local title, level, _, header, _, complete = SafeCall(GetQuestLogTitle, i)
             if title and not header then
-                local row = (complete and (complete > 0 or complete == 1) and "[DONE] " or "") .. (level and ("[" .. level .. "] ") or "") .. Clean(title)
+                local clean = Clean(title)
+                local row = (complete and (complete > 0 or complete == 1) and "[DONE] " or "") .. (level and ("[" .. level .. "] ") or "") .. clean
+                local objective, game = "", ""
                 if SelectQuestLogEntry and GetNumQuestLeaderBoards and GetQuestLogLeaderBoard then
                     SafeCall(SelectQuestLogEntry, i)
                     local p = {}
@@ -223,14 +239,23 @@ local function Quests()
                         local text = SafeCall(GetQuestLogLeaderBoard, j)
                         if text then p[#p + 1] = Clean(text) end
                     end
-                    if #p > 0 then row = row .. " (" .. table.concat(p, "; ") .. ")" end
+                    if #p > 0 then objective = table.concat(p, "; "); row = row .. " (" .. objective .. ")" end
+                    if withText and GetQuestLogQuestText then
+                        local desc, obj = SafeCall(GetQuestLogQuestText)
+                        game = FirstSentence((obj and obj ~= "" and obj) or desc or "", 110)
+                    end
                 end
-                out[#out + 1] = row
+                out[#out + 1] = { title = clean, row = row, objective = objective, game = game }
             end
         end
         if selected and SelectQuestLogEntry then SafeCall(SelectQuestLogEntry, selected) end
     end
     return out
+end
+local function Quests()
+    local rows = {}
+    for _, e in ipairs(QuestEntries(false)) do rows[#rows + 1] = e.row end
+    return rows
 end
 
 local function ProfessionNames()
@@ -348,7 +373,7 @@ local function DeliveryWatch(now)
     txReq = nil
     MBX.Clear(); SendHello()                       -- the hello stays queued, so the link comes up when the helper starts
     MBX.expecting = false
-    DB.awaitingReq = nil
+    DB.awaitingReq = nil; DB.silentReq = nil
     if pendingMsg then pendingMsg.text = T("helperOff") end
     pendingMsg = nil
     SetStatus("status_nolink")
@@ -366,16 +391,17 @@ do
     end
 end
 
-local function BeginTransmit(question, kind, extra)
+local function BeginTransmit(question, kind, extra, silent)
     local effort = EFFORTS[DB.effort or 2] or "medium"
     local lang = DB.language == "en" and "English" or "Turkish"
     local text = "LG2 lang=" .. lang .. "; effort=" .. effort .. "; model=" .. (DB.model or MODEL_IDS[1]) .. "; kind=" .. (kind or "ask")
-        .. "\nQuestion: " .. question .. (extra and extra ~= "" and ("\nAbout: " .. extra) or "") .. "\n\n" .. CompactContext()
+        .. "\nQuestion: " .. question .. (extra and extra ~= "" and ("\nAbout: " .. extra) or "") .. (silent and "" or ("\n\n" .. CompactContext()))
     text = Utf8Prefix(text, MAX_BYTES)
     DB.request = ((tonumber(DB.request) or 0) + 1) % 65536
     local chat = ActiveChat()
     local msgs = chat.messages
-    pendingMsg = msgs[#msgs]
+    pendingMsg = (not silent) and msgs[#msgs] or nil
+    DB.silentReq = silent and DB.request or nil          -- a silent answer is not shown in the chat (quest descriptions)
     DB.awaitingReq = DB.request
     if not useMailbox then                      -- helper / link folders missing: say so instead of waiting forever
         DB.awaitingReq = nil
@@ -408,22 +434,31 @@ local function AddUserMessage(text, shown)
     RenderSidebar()
 end
 
+local hoverTags, hoverSkip = {}, {}                      -- "[Name]" -> what the tooltip said, for the next question
 local function SendQuestion(text, shown, kind, extra)
     text = tostring(text or (inputBox and inputBox:GetText()) or ""):gsub("^%s+", ""):gsub("%s+$", "")
     if KN and KN.LinkDetails then                          -- real in-game stats of shift-clicked items
         local details = {}
         for link in text:gmatch("|H(item:[%-%d:]+)|h") do
-            local d = SafeCall(KN.LinkDetails, link)
-            local XT = LamboGuideExtras
-            local price = XT and XT.PriceLine and SafeCall(XT.PriceLine, tonumber(link:match("item:(%d+)")))
-            if price then d = (d and (d .. " | ") or "") .. "prices: " .. price end
-            local gearLine = LamboGuideGear and SafeCall(LamboGuideGear.AiLine, link)
-            if gearLine then d = (d and (d .. " | ") or "") .. gearLine end
-            if d and #details < 3 then details[#details + 1] = Clean(d) end
+            if not hoverSkip[link:match("item:(%d+)") or ""] then
+                local d = SafeCall(KN.LinkDetails, link)
+                local XT = LamboGuideExtras
+                local price = XT and XT.PriceLine and SafeCall(XT.PriceLine, tonumber(link:match("item:(%d+)")))
+                if price then d = (d and (d .. " | ") or "") .. "prices: " .. price end
+                local gearLine = LamboGuideGear and SafeCall(LamboGuideGear.AiLine, link)
+                if gearLine then d = (d and (d .. " | ") or "") .. gearLine end
+                if d and #details < 3 then details[#details + 1] = Clean(d) end
+            end
         end
         if #details > 0 then extra = (extra and (extra .. " || ") or "") .. "Item tooltip: " .. table.concat(details, " || ") end
     end
     text = text:gsub("|c%x%x%x%x%x%x%x%x|H.-|h(%[.-%])|h|r", "%1"):gsub("|H.-|h(%[.-%])|h", "%1")
+    if next(hoverTags) then
+        local more = {}
+        for tag, info in pairs(hoverTags) do if text:find(tag, 1, true) and #more < 3 then more[#more + 1] = info end end
+        if #more > 0 then extra = (extra and (extra .. " || ") or "") .. table.concat(more, " || ") end
+        hoverTags, hoverSkip = {}, {}
+    end
     if text == "" then return end
     if useMailbox and txReq then if statusText then statusText:SetText(C.gold .. Tx("busy") .. C.reset) end; return end
     text = Utf8Prefix(text, 450)
@@ -450,8 +485,19 @@ local function HandleReply(raw)
     end
 end
 
+local function HasSavedChats()
+    for _, c in ipairs(DB.chats or {}) do if #(c.messages or {}) > 0 then return true end end
+    return false
+end
 local function NewChat()
     DB.chats = DB.chats or {}
+    local cur = DB.chats[DB.currentChat or 0]
+    if cur and #(cur.messages or {}) == 0 then          -- the current chat is still empty: no second empty one
+        pendingMsg = nil
+        if histMenu then histMenu:Hide() end
+        RenderSidebar(); RenderChat()
+        return
+    end
     DB.chats[#DB.chats + 1] = { title = T("chatDefault") .. " " .. (#DB.chats + 1), messages = {} }
     DB.currentChat = #DB.chats
     pendingMsg = nil
@@ -470,6 +516,7 @@ local function ConfirmDelete(index)
             if #DB.chats == 0 then DB.chats[1] = { title = T("chatDefault"), messages = {} } end
             DB.currentChat = math.max(1, math.min(DB.currentChat or 1, #DB.chats))
             pendingDelete = nil; pendingMsg = nil
+            if histMenu and not HasSavedChats() then histMenu:Hide() end
             RenderSidebar(); RenderChat()
         end,
         timeout = 0, whileDead = 1, hideOnEscape = 1, preferredIndex = 3,
@@ -695,10 +742,53 @@ local function CharacterText()
     if sess and sess ~= "" then L[#L + 1] = ""; L[#L + 1] = sess end
     return table.concat(L, "\n")
 end
+local questMissing = 0
+local function QuestDesc(e)
+    if DB.language == "en" then return e.game ~= "" and e.game or nil end
+    return DB.questTr and DB.questTr[e.title]
+end
 local function QuestText()
-    local q = Quests(); local L = { C.gold .. T("activeQuests") .. C.reset, "" }
-    if #q == 0 then L[#L + 1] = T("noQuests") else for _, s in ipairs(q) do L[#L + 1] = "- " .. s end end
+    local entries = QuestEntries(true); local L = { C.gold .. T("activeQuests") .. C.reset, "" }
+    questMissing = 0
+    if #entries == 0 then L[#L + 1] = T("noQuests") end
+    for _, e in ipairs(entries) do
+        L[#L + 1] = "- " .. e.row
+        local d = QuestDesc(e)
+        if d then L[#L + 1] = "    " .. C.muted .. d .. C.reset elseif DB.language ~= "en" then questMissing = questMissing + 1 end
+    end
     return table.concat(L, "\n")
+end
+local descBtn
+-- One silent question for all quests that still lack a Turkish description; the answer ("n|sentence" lines) fills DB.questTr.
+local function RequestQuestDesc()
+    if not DB or DB.language == "en" then return end
+    if txReq or DB.awaitingReq then if statusText then statusText:SetText(C.gold .. Tx("busy") .. C.reset) end; return end
+    local lines, titles = {}, {}
+    for _, e in ipairs(QuestEntries(true)) do
+        if not (DB.questTr and DB.questTr[e.title]) and #titles < 12 then
+            titles[#titles + 1] = e.title
+            lines[#lines + 1] = #titles .. "|" .. e.title .. "|" .. e.objective .. "|" .. e.game
+        end
+    end
+    if #titles == 0 then return end
+    DB.questAsk = titles
+    BeginTransmit(T("questDescAsk") .. "\n" .. table.concat(lines, "\n"), "ask", nil, true)
+    if descBtn then descBtn:SetText(Tx("questDescWait")); StyleButton(descBtn, 12) end
+end
+local function HandleQuestDesc(body)
+    DB.questTr = DB.questTr or {}
+    local got = 0
+    for line in tostring(body or ""):gmatch("[^\n]+") do
+        local n, d = line:match("^%s*(%d+)%s*|%s*(.-)%s*$")
+        local title = n and DB.questAsk and DB.questAsk[tonumber(n)]
+        if title and d and d ~= "" then DB.questTr[title] = Utf8Prefix(Clean(d), 160); got = got + 1 end
+    end
+    DB.questAsk = nil
+    if MBX then MBX.expecting = false end
+    SetStatus(got > 0 and "status_ok" or "status_idle")
+    if got == 0 then print(C.gold .. ToASCII(T("questDescFail")) .. C.reset) end
+    if RefreshInfo then RefreshInfo() end
+    return got
 end
 local function ProfessionText()
     local j = ProfessionNames(); local L = { C.gold .. T("professions") .. C.reset, "" }
@@ -739,6 +829,7 @@ RenderSidebar = function()
         y = y + 28
     end
     for i = #DB.chats + 1, #sideRows do sideRows[i].title:Hide(); sideRows[i].trash:Hide() end
+    if histMenu then histMenu:SetHeight(math.min(280, math.max(70, y + 38))) end
     chatListContent:SetHeight(math.max(chatListScroll:GetHeight(), y + 4))
     local max = math.max(0, chatListContent:GetHeight() - chatListScroll:GetHeight())
     chatListScroll:SetVerticalScroll(math.min(chatListScroll:GetVerticalScroll(), max))
@@ -747,10 +838,17 @@ end
 RefreshInfo = function()
     if not info or not info:IsShown() then return end
     for name, b in pairs(tabs) do b:SetAlpha(name == currentTab and 1 or 0.6) end
+    if descBtn and currentTab ~= "quests" then descBtn:Hide() end
     Shown(characterView.scroll, currentTab == "character"); Shown(questsView.scroll, currentTab == "quests"); Shown(professionsView.scroll, currentTab == "professions")
     Shown(inventoryView.scroll, currentTab == "inventory"); Shown(invSearch, currentTab == "inventory")
     if currentTab == "character" then SetTextView(characterView, CharacterText())
-    elseif currentTab == "quests" then SetTextView(questsView, QuestText())
+    elseif currentTab == "quests" then
+        SetTextView(questsView, QuestText())
+        local waiting = DB.silentReq and DB.awaitingReq
+        if descBtn then
+            Shown(descBtn, DB.language ~= "en" and (questMissing > 0 or waiting))
+            descBtn:SetText(waiting and Tx("questDescWait") or Tx("questDescBtn")); StyleButton(descBtn, 12)
+        end
     elseif currentTab == "inventory" then
         local XT = LamboGuideExtras
         if XT and XT.ScanBags then SafeCall(XT.ScanBags) end
@@ -776,7 +874,7 @@ RefreshLabels = function()
     modelRow:SetText(Disp(T("model") .. ": " .. (MODEL_LABELS[DB.model] or MODEL_LABELS[MODEL_IDS[1]]))); StyleButton(modelRow, 12)
     thinkRow:SetText(Disp(T("thinking") .. ": " .. T(EFFORTS[DB.effort or 2]))); StyleButton(thinkRow, 12)
     langRow:SetText(Disp(T("language") .. ": " .. (DB.language == "en" and "English" or "Türkçe"))); StyleButton(langRow, 12)
-    if hoverRow then hoverRow:SetText(Disp(T("hoverKey") .. ": " .. (DB.hoverKey or T("none")))); StyleButton(hoverRow, 12) end
+    if hoverRow then hoverRow:SetText(Disp(T("hoverKey") .. ": " .. ((DB.hoverKey and DB.hoverKey:gsub("%-", "+")) or T("none")))); StyleButton(hoverRow, 12) end
     SetFontSafe(inputBox, 14); SetFontSafe(statusText, 11)
     SetStatus(useMailbox and "status_idle" or "status_nolink")
     RenderSidebar()
@@ -828,7 +926,11 @@ local function MakeWindow(name, w, h, posKey, defX, defY)
     f:SetMovable(true); f:EnableMouse(true); f:RegisterForDrag("LeftButton"); f:SetClampedToScreen(true)
     f:SetScript("OnDragStart", f.StartMoving)
     f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); SavePos(self, posKey) end)
-    local brand = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge"); brand:SetPoint("TOPLEFT", 18, -8); SetFontSafe(brand, 16)
+    -- title between the two lines of the title bar (about 18 px tall, centre 12 px below the top edge)
+    local brand = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge"); brand:SetPoint("CENTER", f, "TOP", 0, -12)
+    pcall(brand.SetFont, brand, FONT, 13, "OUTLINE")
+    if brand.SetShadowColor then brand:SetShadowColor(0, 0, 0, 0.9); brand:SetShadowOffset(1, -1) end
+    brand:SetText("|cffffd36aLambo|r|cff8fdcffGuide|r")
     f.brand = brand
     f:Hide()
     return f
@@ -863,7 +965,7 @@ end
 
 local function CreatePop()
     popFrame = MakeWindow("LamboGuidePopFrame", 380, 270, "popPos", -470, 0)
-    popFrame:SetFrameStrata("HIGH"); popFrame.brand:SetText(C.gold .. "LamboGuide" .. C.reset)
+    popFrame:SetFrameStrata("HIGH"); 
     if popFrame.CloseButton then popFrame.CloseButton:SetScript("OnClick", function() Dock() end) end
     popFrame:SetScript("OnHide", function() if popped then Dock() end end)
     tinsert(UISpecialFrames, "LamboGuidePopFrame")
@@ -890,13 +992,14 @@ end
 
 CreateInfo = function()
     info = MakeWindow("LamboGuideInfoFrame", 380, 430, "infoPos", 480, 0)
-    info.brand:SetText(C.gold .. "LamboGuide" .. C.reset)
     tinsert(UISpecialFrames, "LamboGuideInfoFrame")
     local xx = 12
     for _, id in ipairs({ "character", "quests", "professions", "inventory" }) do
         local b = MakeButton(info, id, 87, 24, function() currentTab = id; RefreshInfo() end, 11, id); b:SetPoint("TOPLEFT", info, "TOPLEFT", xx, -30); tabs[id] = b; xx = xx + 89
     end
     characterView = TextView(info, 340); questsView = TextView(info, 340); professionsView = TextView(info, 340); inventoryView = TextView(info, 340)
+    questsView.scroll:SetPoint("BOTTOMRIGHT", info, "BOTTOMRIGHT", -12, 42)
+    descBtn = MakeButton(info, nil, 356, 24, function() RequestQuestDesc() end); descBtn:SetPoint("BOTTOM", info, "BOTTOM", 0, 12); descBtn:Hide()
     inventoryView.scroll:SetPoint("TOPLEFT", info, "TOPLEFT", 12, -88)
     invSearch = CreateFrame("EditBox", nil, info, "InputBoxTemplate"); Size(invSearch, 330, 20); invSearch:SetPoint("TOPLEFT", info, "TOPLEFT", 22, -60)
     invSearch:SetAutoFocus(false)
@@ -907,13 +1010,14 @@ end
 
 CreateUI = function()
     frame = MakeWindow("LamboGuideFrame", 520, 440, "pos")
-    frame.brand:SetText(C.gold .. "LamboGuide" .. C.reset)
     tinsert(UISpecialFrames, "LamboGuideFrame")
     frame:SetScript("OnShow", function() if launcher then launcher:SetText("LG") end; RenderChat() end)
     frame:SetScript("OnHide", function() if gearMenu then gearMenu:Hide() end; if histMenu then histMenu:Hide() end end)
 
     -- top bar
-    local histBtn = MakeButton(frame, "chats", 140, 24, function() ToggleMenu(histMenu) end, 12, "history"); histBtn:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -30)
+    local histBtn = MakeButton(frame, "chats", 140, 24, function()
+        if HasSavedChats() then RenderSidebar(); ToggleMenu(histMenu) else histMenu:Hide() end
+    end, 12, "history"); histBtn:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -30)
     local newBtn = IconButton(frame, "+", 28, 24, "new", NewChat); newBtn:SetPoint("LEFT", histBtn, "RIGHT", 4, 0)
     local gearBtn = IconButton(frame, IconText("settings", 16), 28, 24, "settings", function() ToggleMenu(gearMenu) end); gearBtn:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -12, -30)
     local popBtn = IconButton(frame, "↗", 28, 24, "popout", function() PopOut() end); popBtn:SetPoint("RIGHT", gearBtn, "LEFT", -4, 0)
@@ -932,9 +1036,10 @@ CreateUI = function()
     -- chat history menu
     histMenu = MakeMenu(240, 280)
     histMenu:SetPoint("TOPLEFT", histBtn, "BOTTOMLEFT", 0, -2)
-    local nb = MakeButton(histMenu, "new", 220, 24, NewChat, 12); nb:SetPoint("TOPLEFT", histMenu, "TOPLEFT", 10, -10)
+    local histClose = CreateFrame("Button", nil, histMenu, "UIPanelCloseButton"); Size(histClose, 24, 24)
+    histClose:SetPoint("TOPRIGHT", histMenu, "TOPRIGHT", 3, 3); histClose:SetScript("OnClick", function() histMenu:Hide() end)
     chatListScroll = CreateFrame("ScrollFrame", nil, histMenu)
-    chatListScroll:SetPoint("TOPLEFT", histMenu, "TOPLEFT", 10, -42); chatListScroll:SetPoint("BOTTOMRIGHT", histMenu, "BOTTOMRIGHT", -10, 10); chatListScroll:EnableMouseWheel(true)
+    chatListScroll:SetPoint("TOPLEFT", histMenu, "TOPLEFT", 10, -26); chatListScroll:SetPoint("BOTTOMRIGHT", histMenu, "BOTTOMRIGHT", -10, 10); chatListScroll:EnableMouseWheel(true)
     chatListContent = CreateFrame("Frame", nil, chatListScroll); Size(chatListContent, 220, 200); chatListScroll:SetScrollChild(chatListContent)
     chatListScroll:SetScript("OnMouseWheel", function(self, d)
         local max = math.max(0, chatListContent:GetHeight() - self:GetHeight())
@@ -1009,16 +1114,27 @@ LamboGuideCore = { AddNote = AddNote, Ask = function(...) return AskPreset(...) 
 BINDING_HEADER_LAMBOGUIDE = "LamboGuide"
 BINDING_NAME_LAMBOGUIDE_ASKHOVER = "Fare altındakini sor / Ask about hovered"
 
-function LamboGuide_AskHovered()
+-- Put text (an item link or a [Name] tag) into our input box, so the player writes his own question about it.
+local function TagInput(tag)
+    if not (inputBox and frame) then return false end
+    if not frame:IsShown() and not (popFrame and popFrame:IsShown()) then PopOut() end
+    inputBox:SetFocus()
+    local cur = inputBox:GetText() or ""
+    inputBox:Insert((cur ~= "" and not cur:find("%s$") and " " or "") .. tag .. " ")
+    return true
+end
+function LamboGuide_AskHovered()                        -- name kept for the key binding
     if not DB or not frame then return end
     local h = KN and KN.Hovered and SafeCall(KN.Hovered)
     if not h then print(C.gold .. ToASCII(T("hoverNone")) .. C.reset); return end
     local name = Clean(h.name or "?")
-    local extra = "Hovered " .. h.kind .. ": " .. (h.link or name) .. (h.text and (" | tooltip: " .. Clean(h.text)) or "")
+    local tag = (h.kind == "item" and h.link) or ("[" .. name .. "]")
+    local info = "Hovered " .. h.kind .. ": " .. (h.link or name) .. (h.text and (" | tooltip: " .. Clean(h.text)) or "")
     local gearLine = h.kind == "item" and h.link and LamboGuideGear and SafeCall(LamboGuideGear.AiLine, h.link)
-    if gearLine then extra = extra .. " | " .. gearLine end
-    if not frame:IsShown() and not (popFrame and popFrame:IsShown()) then PopOut() end
-    SendQuestion(string.format(T("hoverAsk"), name), string.format(T("hoverShow"), name), "ask", extra)
+    if gearLine then info = info .. " | " .. gearLine end
+    hoverTags["[" .. name .. "]"] = info
+    if h.kind == "item" and h.link then hoverSkip[h.link:match("item:(%d+)") or ""] = true end
+    TagInput(tag)
 end
 
 local hoverButton = CreateFrame("Button", "LamboGuideHoverButton", UIParent)
@@ -1026,11 +1142,18 @@ hoverButton:SetScript("OnClick", function() LamboGuide_AskHovered() end)
 local hoverPending, captureFrame = false, nil
 local MODIFIER = { LSHIFT = true, RSHIFT = true, LCTRL = true, RCTRL = true, LALT = true, RALT = true }
 
+-- The game action a key already does (W = move forward ...), or nil when the key is free. Walking keys must never become ours.
+local function KeyTaken(combo)
+    if not GetBindingAction then return nil end
+    local act = SafeCall(GetBindingAction, combo)
+    if act and act ~= "" and not tostring(act):find("LamboGuideHoverButton", 1, true) then return act end
+end
 local function ApplyHoverKey()
     if not (SetOverrideBindingClick and ClearOverrideBindings) then return end
     if InCombatLockdown and InCombatLockdown() then hoverPending = true; return end
     hoverPending = false
     ClearOverrideBindings(hoverButton)
+    if DB.hoverKey and KeyTaken(DB.hoverKey) then DB.hoverKey = nil end     -- an older version allowed W/S; free the key again
     if DB.hoverKey then SetOverrideBindingClick(hoverButton, true, DB.hoverKey, "LamboGuideHoverButton") end
 end
 
@@ -1051,8 +1174,16 @@ CaptureHoverKey = function()
         if key == "ESCAPE" then
             DB.hoverKey = nil
         else
-            DB.hoverKey = ((IsAltKeyDown and IsAltKeyDown()) and "ALT-" or "") .. ((IsControlKeyDown and IsControlKeyDown()) and "CTRL-" or "")
+            local combo = ((IsAltKeyDown and IsAltKeyDown()) and "ALT-" or "") .. ((IsControlKeyDown and IsControlKeyDown()) and "CTRL-" or "")
                 .. ((IsShiftKeyDown and IsShiftKeyDown()) and "SHIFT-" or "") .. key
+            local taken = KeyTaken(combo)
+            if taken then
+                local msg = string.format(T("keyTaken"), taken)
+                print(C.gold .. ToASCII(msg) .. C.reset)
+                if statusText then statusText:SetText(C.gold .. Disp(msg) .. C.reset) end
+            else
+                DB.hoverKey = combo
+            end
         end
         ApplyHoverKey(); RefreshLabels()
     end)
@@ -1087,7 +1218,10 @@ events:SetScript("OnEvent", function(_, event)
                 local kind, req, body = text:match("^(%a)(%d*)\n?(.*)$")
                 if kind == "A" then
                     req = tonumber(req)
-                    if req and DB.awaitingReq == req then DB.awaitingReq = nil; HandleReply(body) end
+                    if req and DB.awaitingReq == req then
+                        DB.awaitingReq = nil
+                        if DB.silentReq == req then DB.silentReq = nil; HandleQuestDesc(body) else HandleReply(body) end
+                    end
                 elseif kind == "h" then
                     if not MBX.Busy() and not DB.awaitingReq then SetStatus("status_link") end
                 end
@@ -1134,12 +1268,20 @@ events:SetScript("OnEvent", function(_, event)
         -- Shift+click an item into our box. WoW Forever's Blizzard code calls ChatFrameUtil.InsertLink while the old
         -- ChatEdit_InsertLink still exists as a wrapper, so hook both (seen in game 2026-11-10) and drop the echo.
         local lastLink, lastAt = nil, -1
+        local function DefaultChatBusy()
+            local w = (ChatFrameUtil and ChatFrameUtil.GetActiveWindow and ChatFrameUtil.GetActiveWindow())
+                or (ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow())
+            return w and (not w.IsShown or w:IsShown())
+        end
         local function InsertHook(link)
-            if not (link and inputBox and inputBox:HasFocus()) then return end
+            if not (link and inputBox) then return end
+            local open = (frame and frame:IsShown()) or (popFrame and popFrame:IsShown())
+            if not (inputBox:HasFocus() or (open and not DefaultChatBusy())) then return end
             local now = GetTime and GetTime() or 0
             if link == lastLink and now - lastAt < 0.2 then return end
             lastLink, lastAt = link, now
-            inputBox:Insert(link)
+            inputBox:SetFocus()
+            inputBox:Insert(link .. " ")
             -- Blizzard does not know our box took the link, so on a stack it also opens "split stack": close it again
             if C_Timer and C_Timer.After then
                 C_Timer.After(0, function()
@@ -1158,4 +1300,4 @@ events:SetScript("OnEvent", function(_, event)
     end
 end)
 
-LamboGuideTest = { Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, DeliveryWatch = function(...) return DeliveryWatch(...) end, ThinkingTick = function(now) ThinkingTick(now); return thinkFS and thinkFS:GetText() end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }
+LamboGuideTest = { HasSavedChats = function() return HasSavedChats() end, NewChat = function() return NewChat() end, QuestText = function() return QuestText() end, RequestQuestDesc = function() return RequestQuestDesc() end, HandleQuestDesc = function(...) return HandleQuestDesc(...) end, KeyTaken = function(...) return KeyTaken(...) end, TagInput = function(...) return TagInput(...) end, Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, DeliveryWatch = function(...) return DeliveryWatch(...) end, ThinkingTick = function(now) ThinkingTick(now); return thinkFS and thinkFS:GetText() end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }

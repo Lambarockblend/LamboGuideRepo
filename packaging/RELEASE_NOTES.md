@@ -1,4 +1,4 @@
-## LamboGuide 0.7.2
+## LamboGuide 0.7.3
 
 İlk herkese açık sürüm / first public release.
 
