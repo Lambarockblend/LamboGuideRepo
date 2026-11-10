@@ -21,7 +21,7 @@ local TEXT = {
         sentWait="Soru gönderildi. Cevap hazır olunca kendiliğinden gelir.", thinkingNow="Düşünüyor", helperOff="Soru iletilemedi: yardımcı program açık değil. Yardımcıyı aç (saatin yanındaki LG simgesi), sonra tekrar sor.", noLink="Yardımcı programa bağlanılamadı. LamboGuide kurulumunu çalıştır, yardımcı açıkken oyunu bir kez tamamen kapatıp aç.",
         replyOk="Cevap alındı.", busy="Önceki soru hâlâ iletiliyor, bekle.",
         hint="Yardımcı uygulama açık olmalı (saatin yanındaki LG simgesi).",
-        status_idle="Hazır", status_tx="İletiliyor", status_wait="Cevap bekleniyor", status_ok="Cevap alındı", status_link="Yardımcı bağlı", status_nolink="Yardımcı bağlı değil", onMap="Haritada", inventory="Envanter", addonsRow="Önerilen addonlar", askLevelUp="Yeni seviyemde eğitmenden ne öğrenmeliyim, yetenek puanımı nereye vermeliyim ve sıradaki hedefim ne olmalı?", askDungeon="%s için kısa rehber: bosslar ve dikkat edilecekler, zindanın görevleri, karakterime uygun önemli ganimetler.", wpSet="Haritaya işaret kondu (M ile bak), ok yolu gösteriyor.", wpFail="Bu yere işaret konamadı.", hoverKey="Fare altını ekle", none="Yok", pressKey="Bir tuşa bas (Esc: kaldır)", keyTaken="Bu tuş oyunda zaten kullanılıyor (%s). Alt veya Ctrl ile birlikte bas, örnek: Alt+Q.", tagged="Sohbet kutusuna eklendi, sorunu yazıp gönder.", questDescBtn="Görev açıklamalarını getir", questDescWait="Açıklamalar bekleniyor…", questDescAsk="Aşağıdaki satırların her biri bir WoW görevi (numara|ad|hedef|oyun metni). Her görev için ne yapılacağını anlatan tek kısa Türkçe cümle yaz (en çok 14 kelime). Cevapta yalnızca görev başına bir satır olsun, şu biçimde: numara|cümle. Başka hiçbir şey yazma.", questDescFail="Açıklamalar okunamadı, tekrar dene.", hoverNone="Fare bir eşyanın, büyünün veya birimin üstünde değil.", hoverAsk="Bu %s hakkında bilgi ver: karakterim için işe yarar mı, ne yapmalıyım?", hoverShow="Fare altı: %s", combatWait="Savaştan sonra tekrar dene.",
+        status_idle="Hazır", status_tx="İletiliyor", status_wait="Cevap bekleniyor", status_ok="Cevap alındı", status_link="Yardımcı bağlı", status_nolink="Yardımcı bağlı değil", onMap="Haritada", inventory="Envanter", addonsRow="Önerilen addonlar", askLevelUp="Yeni seviyemde eğitmenden ne öğrenmeliyim, yetenek puanımı nereye vermeliyim ve sıradaki hedefim ne olmalı?", askDungeon="%s için kısa rehber: bosslar ve dikkat edilecekler, zindanın görevleri, karakterime uygun önemli ganimetler.", wpSet="Haritaya işaret kondu (M ile bak), ok yolu gösteriyor.", wpFail="Bu yere işaret konamadı.", invSearchLabel="Envanterde ara:", hoverKey="Fare altını ekle", none="Yok", pressKey="Bir tuşa bas (Esc: kaldır)", keyTaken="Bu tuş oyunda zaten kullanılıyor (%s). Alt veya Ctrl ile birlikte bas, örnek: Alt+Q.", tagged="Sohbet kutusuna eklendi, sorunu yazıp gönder.", questDescBtn="Görev açıklamalarını getir", questDescWait="Açıklamalar bekleniyor…", questDescAsk="Aşağıdaki satırların her biri bir WoW görevi (numara|ad|hedef|oyun metni). Her görev için ne yapılacağını anlatan tek kısa Türkçe cümle yaz (en çok 14 kelime). Cevapta yalnızca görev başına bir satır olsun, şu biçimde: numara|cümle. Başka hiçbir şey yazma.", questDescFail="Açıklamalar okunamadı, tekrar dene.", hoverNone="Fare bir eşyanın, büyünün veya birimin üstünde değil.", hoverAsk="Bu %s hakkında bilgi ver: karakterim için işe yarar mı, ne yapmalıyım?", hoverShow="Fare altı: %s", combatWait="Savaştan sonra tekrar dene.",
         patchQuery="WoW: Forever resmi yama ve hotfix notlarını web'de ara. En yeni önce olacak şekilde tarih, başlık, değişiklik özeti ve kaynak bağlantılarını listele. Retail ve Classic Era ile karıştırma.",
         patchShow="Son yama notları", patchTab="Yama", patchGet="Yama notlarını yenile", patchWait="Yama notları aranıyor…", patchEmpty="Henüz yama notu alınmadı. Aşağıdaki düğmeye bas.", patchFail="Yama notları alınamadı, tekrar dene.", pingShow="Bağlantı testi",
         charTitle="KARAKTER", gear="GİYİLİ EŞYALAR", bags="ÇANTA", activeQuests="AKTİF GÖREVLER",
@@ -41,7 +41,7 @@ local TEXT = {
         sentWait="Question sent. The answer arrives by itself when ready.", thinkingNow="Thinking", helperOff="The question could not be sent: the helper app is not running. Start it (LG icon next to the clock), then ask again.", noLink="No link to the helper app. Run the LamboGuide installer, then fully restart the game once while the helper is running.",
         replyOk="Answer received.", busy="The previous question is still being sent, please wait.",
         hint="The helper app must be running (LG icon next to the clock).",
-        status_idle="Ready", status_tx="Sending", status_wait="Waiting for answer", status_ok="Answer received", status_link="Helper connected", status_nolink="Helper not connected", onMap="On map", inventory="Inventory", addonsRow="Recommended addons", askLevelUp="At my new level, what should I learn from the trainer, where should my talent points go and what should I do next?", askDungeon="Short guide for %s: bosses and what to watch for, the dungeon quests, and important loot for my character.", wpSet="Map marker set (press M), the arrow shows the way.", wpFail="Could not mark this place.", hoverKey="Tag hovered", none="None", pressKey="Press a key (Esc: remove)", keyTaken="That key is already used by the game (%s). Press it together with Alt or Ctrl, for example Alt+Q.", tagged="Added to the chat box, type your question and send.", questDescBtn="Get quest descriptions", questDescWait="Waiting for descriptions…", questDescAsk="Each line below is a WoW quest (number|name|objective|game text). For each quest write one short sentence about what to do (14 words at most). Answer with exactly one line per quest in the form: number|sentence. Write nothing else.", questDescFail="Could not read the descriptions, try again.", hoverNone="The mouse is not over an item, spell or unit.", hoverAsk="Tell me about this %s: is it useful for my character, what should I do?", hoverShow="Hovered: %s", combatWait="Try again after combat.",
+        status_idle="Ready", status_tx="Sending", status_wait="Waiting for answer", status_ok="Answer received", status_link="Helper connected", status_nolink="Helper not connected", onMap="On map", inventory="Inventory", addonsRow="Recommended addons", askLevelUp="At my new level, what should I learn from the trainer, where should my talent points go and what should I do next?", askDungeon="Short guide for %s: bosses and what to watch for, the dungeon quests, and important loot for my character.", wpSet="Map marker set (press M), the arrow shows the way.", wpFail="Could not mark this place.", invSearchLabel="Search inventory:", hoverKey="Tag hovered", none="None", pressKey="Press a key (Esc: remove)", keyTaken="That key is already used by the game (%s). Press it together with Alt or Ctrl, for example Alt+Q.", tagged="Added to the chat box, type your question and send.", questDescBtn="Get quest descriptions", questDescWait="Waiting for descriptions…", questDescAsk="Each line below is a WoW quest (number|name|objective|game text). For each quest write one short sentence about what to do (14 words at most). Answer with exactly one line per quest in the form: number|sentence. Write nothing else.", questDescFail="Could not read the descriptions, try again.", hoverNone="The mouse is not over an item, spell or unit.", hoverAsk="Tell me about this %s: is it useful for my character, what should I do?", hoverShow="Hovered: %s", combatWait="Try again after combat.",
         patchQuery="Search the web for official WoW: Forever patch and hotfix notes. List newest first with date, title, short change summary and source links. Do not mix in Retail or Classic Era.",
         patchShow="Latest patch notes", patchTab="Patch", patchGet="Refresh patch notes", patchWait="Searching patch notes…", patchEmpty="No patch notes yet. Press the button below.", patchFail="Could not get the patch notes, try again.", pingShow="Link test",
         charTitle="CHARACTER", gear="EQUIPPED ITEMS", bags="BAGS", activeQuests="ACTIVE QUESTS",
@@ -313,18 +313,19 @@ end
 local MAX_BYTES = 3600
 
 ---------------------------------------------------------------- state / forward declarations
-local frame, info, popFrame, mainArea, placeholder, chatPanel, chatScroll, chatContent, inputBox, statusText, statusDot
+local frame, page, popFrame, mainArea, placeholder, chatPanel, chatScroll, chatContent, inputBox, statusText, statusDot
 local histMenu, gearMenu, modelRow, thinkRow, langRow, hoverRow, launcher, popped
 local CaptureHoverKey, AskPreset
-local characterView, questsView, professionsView, chatListScroll, chatListContent, inventoryView, invSearch
-local tabs, currentTab = {}, "character"
+local pageView, pageSearch, pageSearchLabel, chatListScroll, chatListContent, topCharBtn, topPatchBtn, pageDirty, lastPageRefresh
+local currentTab = "chat"            -- "chat", or a page inside the main window: "character" (character + quests + jobs + bags) / "patch"
+pageDirty, lastPageRefresh = false, 0
 local widgets = {}                       -- localized widgets {w=, key=}
 local sideRows, chatRows = {}, {}
 local pendingMsg, pendingDelete = nil, nil
 local txReq, txSince = nil, 0          -- question on its way to the helper (nil once the helper took it)
 local DELIVER_TIMEOUT = 20             -- seconds; a running helper takes a question in 1-3 s
 local MBX, useMailbox = LamboGuideMailbox, false
-local RenderChat, RenderSidebar, SelectTab, RefreshLabels, SetStatus, RefreshInfo, CreateUI, CreateInfo, Dock, PopOut
+local RenderChat, RenderSidebar, SelectTab, RefreshLabels, SetStatus, RefreshInfo, CreateUI, CreatePage, Dock, PopOut
 
 local function ActiveChat()
     DB.chats = DB.chats or {}
@@ -387,6 +388,7 @@ do
             if not GetTime then return end
             if txReq then DeliveryWatch(GetTime()) end
             if thinkFS then ThinkingTick(GetTime()) end
+            if pageDirty and page and page:IsShown() and GetTime() - lastPageRefresh > 0.5 then RefreshInfo() end
         end)
     end
 end
@@ -496,14 +498,14 @@ local function NewChat()
     if cur and #(cur.messages or {}) == 0 then          -- the current chat is still empty: no second empty one
         pendingMsg = nil
         if histMenu then histMenu:Hide() end
-        RenderSidebar(); RenderChat()
+        RenderSidebar(); SelectTab("chat")
         return
     end
     DB.chats[#DB.chats + 1] = { title = T("chatDefault") .. " " .. (#DB.chats + 1), messages = {} }
     DB.currentChat = #DB.chats
     pendingMsg = nil
     if histMenu then histMenu:Hide() end
-    RenderSidebar(); RenderChat()
+    RenderSidebar(); SelectTab("chat")
 end
 
 local function ConfirmDelete(index)
@@ -792,7 +794,7 @@ local function HandleQuestDesc(body)
     return got
 end
 -- Patch notes live in their own tab; the question and the answer never appear in the chat.
-local patchView, patchGetBtn
+local patchGetBtn
 local function RequestPatch()
     if not DB then return end
     if txReq or DB.awaitingReq then if statusText then statusText:SetText(C.gold .. Tx("busy") .. C.reset) end; return end
@@ -850,7 +852,7 @@ RenderSidebar = function()
         if #label > 26 then label = Utf8Prefix(label, 24) .. ".." end
         row.title:SetText(label); StyleButton(row.title, 11)
         row.title:SetAlpha(i == DB.currentChat and 1 or 0.7)
-        row.title:SetScript("OnClick", function() DB.currentChat = i; pendingMsg = nil; if histMenu then histMenu:Hide() end; RenderSidebar(); RenderChat() end)
+        row.title:SetScript("OnClick", function() DB.currentChat = i; pendingMsg = nil; if histMenu then histMenu:Hide() end; RenderSidebar(); SelectTab("chat") end)
         row.trash:SetScript("OnClick", function() ConfirmDelete(i) end)
         row.title:Show(); row.trash:Show()
         y = y + 28
@@ -862,38 +864,86 @@ RenderSidebar = function()
     chatListScroll:SetVerticalScroll(math.min(chatListScroll:GetVerticalScroll(), max))
 end
 
-RefreshInfo = function()
-    if not info or not info:IsShown() then return end
-    for name, b in pairs(tabs) do b:SetAlpha(name == currentTab and 1 or 0.6) end
-    if descBtn and currentTab ~= "quests" then descBtn:Hide() end
-    if patchView then Shown(patchView.scroll, currentTab == "patch") end
-    if patchGetBtn and currentTab ~= "patch" then patchGetBtn:Hide() end
-    Shown(characterView.scroll, currentTab == "character"); Shown(questsView.scroll, currentTab == "quests"); Shown(professionsView.scroll, currentTab == "professions")
-    Shown(inventoryView.scroll, currentTab == "inventory"); Shown(invSearch, currentTab == "inventory")
-    if currentTab == "character" then SetTextView(characterView, CharacterText())
-    elseif currentTab == "quests" then
-        SetTextView(questsView, QuestText())
-        local waiting = DB.silentReq and DB.awaitingReq
-        if descBtn then
-            Shown(descBtn, DB.language ~= "en" and (questMissing > 0 or waiting))
-            descBtn:SetText(waiting and Tx("questDescWait") or Tx("questDescBtn")); StyleButton(descBtn, 12)
+-- Parchment look for the page: warm paper, dark rim, soft edge shading and faint fibres (no texture files needed)
+local function Parchment(f)
+    local rim = f:CreateTexture(nil, "BACKGROUND"); rim:SetAllPoints(); Color(rim, 0.25, 0.16, 0.08, 1)
+    local sheet = f:CreateTexture(nil, "BORDER"); sheet:SetPoint("TOPLEFT", f, "TOPLEFT", 3, -3); sheet:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -3, 3); Color(sheet, 0.85, 0.75, 0.53, 1)
+    local seed = 11
+    local function rnd() seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648 end
+    for _ = 1, 50 do
+        local t = f:CreateTexture(nil, "ARTWORK")
+        local dark = rnd() < 0.5
+        if dark then Color(t, 0.55, 0.40, 0.22, 0.10 + rnd() * 0.06) else Color(t, 0.97, 0.90, 0.70, 0.14 + rnd() * 0.08) end
+        Size(t, 30 + rnd() * 240, 1 + math.floor(rnd() * 2))
+        t:SetPoint("TOPLEFT", f, "TOPLEFT", 6 + rnd() * 330, -(6 + rnd() * 350))
+    end
+    for k = 0, 5 do
+        local alpha = 0.26 - k * 0.04
+        for _, e in ipairs({ { "TOPLEFT", "TOPRIGHT", true, 1 }, { "BOTTOMLEFT", "BOTTOMRIGHT", true, -1 }, { "TOPLEFT", "BOTTOMLEFT", false, 1 }, { "TOPRIGHT", "BOTTOMRIGHT", false, -1 } }) do
+            local t = f:CreateTexture(nil, "ARTWORK"); Color(t, 0.40, 0.26, 0.10, alpha)
+            if e[3] then
+                t:SetPoint(e[1], f, e[1], 3, (e[4] == 1 and -(3 + k) or (3 + k))); t:SetPoint(e[2], f, e[2], -3, (e[4] == 1 and -(3 + k) or (3 + k))); t:SetHeight(1)
+            else
+                t:SetPoint(e[1], f, e[1], (e[4] == 1 and (3 + k) or -(3 + k)), -3); t:SetPoint(e[2], f, e[2], (e[4] == 1 and (3 + k) or -(3 + k)), 3); t:SetWidth(1)
+            end
         end
-    elseif currentTab == "inventory" then
+    end
+end
+-- text colours that read on paper (the chat's light-on-dark colours are unreadable there)
+local PAGE_COLORS = { ["|cffffd36a"] = "|cff7a2e00", ["|cffb9b0a0"] = "|cff5a4a35", ["|cff7fe27c"] = "|cff1d6b1a",
+    ["|cff72d9e8"] = "|cff0b5a78", ["|cffff7777"] = "|cff9c1c1c", ["|cff5aa9ff"] = "|cff1a4f9c", ["|cff4ddb5a"] = "|cff1d6b1a", ["|cffff7070"] = "|cff9c1c1c" }
+local function OnPaper(t)
+    for from, to in pairs(PAGE_COLORS) do t = t:gsub(from, to) end
+    return t
+end
+local function MarkTop()
+    if topCharBtn then topCharBtn:SetAlpha(currentTab == "character" and 1 or 0.75) end
+    if topPatchBtn then topPatchBtn:SetAlpha(currentTab == "patch" and 1 or 0.75) end
+end
+RefreshInfo = function()
+    if not page or not page:IsShown() then return end
+    pageDirty = false; lastPageRefresh = GetTime and GetTime() or 0
+    local body, bottom, searchOn = "", nil, false
+    if currentTab == "patch" then
+        body = PatchText()
+        local waiting = DB.silentKind == "patch" and DB.awaitingReq
+        patchGetBtn:SetText(waiting and Tx("patchWait") or Tx("patchGet")); StyleButton(patchGetBtn, 12)
+        bottom = patchGetBtn
+    else
         local XT = LamboGuideExtras
         if XT and XT.ScanBags then SafeCall(XT.ScanBags) end
-        SetTextView(inventoryView, XT and XT.InventoryText and (SafeCall(XT.InventoryText, invSearch:GetText()) or "") or "")
-    elseif currentTab == "patch" then
-        SetTextView(patchView, PatchText())
-        local waiting = DB.silentKind == "patch" and DB.awaitingReq
-        patchGetBtn:Show(); patchGetBtn:SetText(waiting and Tx("patchWait") or Tx("patchGet")); StyleButton(patchGetBtn, 12)
-    else SetTextView(professionsView, ProfessionText()) end
+        local inv = XT and XT.InventoryText and (SafeCall(XT.InventoryText, pageSearch:GetText()) or "") or ""
+        local sep = "\n\n" .. C.muted .. string.rep("─", 30) .. C.reset .. "\n\n"
+        body = table.concat({ CharacterText(), QuestText(), ProfessionText(), C.gold .. T("inventory") .. C.reset .. "\n" .. inv }, sep)
+        searchOn = true
+        local waiting = DB.silentReq and DB.silentKind == "qdesc" and DB.awaitingReq
+        if DB.language ~= "en" and (questMissing > 0 or waiting) then
+            descBtn:SetText(waiting and Tx("questDescWait") or Tx("questDescBtn")); StyleButton(descBtn, 12)
+            bottom = descBtn
+        end
+    end
+    if descBtn and bottom ~= descBtn then descBtn:Hide() end
+    if patchGetBtn and bottom ~= patchGetBtn then patchGetBtn:Hide() end
+    if bottom then bottom:Show() end
+    Shown(pageSearch, searchOn); Shown(pageSearchLabel, searchOn)
+    pageView.scroll:ClearAllPoints()
+    pageView.scroll:SetPoint("TOPLEFT", page, "TOPLEFT", 14, searchOn and -40 or -12)
+    pageView.scroll:SetPoint("BOTTOMRIGHT", page, "BOTTOMRIGHT", -14, bottom and 42 or 12)
+    SetTextView(pageView, OnPaper(body))
+    MarkTop()
 end
 
 SelectTab = function(id)
-    if id == "chat" or not id then RenderChat(); return end
+    if id == "chat" or not id then
+        currentTab = "chat"
+        if page then page:Hide() end
+        MarkTop(); RenderChat(); return
+    end
+    if id ~= "patch" then id = "character" end          -- quests / jobs / bags are sections of the character page
+    if not page then return end
     currentTab = id
-    if not info then CreateInfo() end
-    info:Show(); RefreshInfo()
+    pageView.scroll:SetVerticalScroll(0)
+    page:Show(); RefreshInfo()
 end
 
 RefreshLabels = function()
@@ -1023,25 +1073,20 @@ PopOut = function()
     RenderChat()
 end
 
-CreateInfo = function()
-    info = MakeWindow("LamboGuideInfoFrame", 440, 430, "infoPos", 480, 0)
-    tinsert(UISpecialFrames, "LamboGuideInfoFrame")
-    local xx = 12
-    for _, def in ipairs({ { "character", "character" }, { "quests", "quests" }, { "professions", "professions" }, { "inventory", "inventory" }, { "patch", "patchTab" } }) do
-        local id = def[1]
-        local b = MakeButton(info, def[2], 84, 24, function() currentTab = id; RefreshInfo() end, 11, id == "patch" and "patch" or id); b:SetPoint("TOPLEFT", info, "TOPLEFT", xx, -30); tabs[id] = b; xx = xx + 86
-    end
-    characterView = TextView(info, 400); questsView = TextView(info, 400); professionsView = TextView(info, 400); inventoryView = TextView(info, 400)
-    patchView = TextView(info, 400); patchView.scroll:SetPoint("BOTTOMRIGHT", info, "BOTTOMRIGHT", -12, 42)
-    patchGetBtn = MakeButton(info, nil, 416, 24, function() RequestPatch() end); patchGetBtn:SetPoint("BOTTOM", info, "BOTTOM", 0, 12); patchGetBtn:Hide()
-    questsView.scroll:SetPoint("BOTTOMRIGHT", info, "BOTTOMRIGHT", -12, 42)
-    descBtn = MakeButton(info, nil, 416, 24, function() RequestQuestDesc() end); descBtn:SetPoint("BOTTOM", info, "BOTTOM", 0, 12); descBtn:Hide()
-    inventoryView.scroll:SetPoint("TOPLEFT", info, "TOPLEFT", 12, -88)
-    invSearch = CreateFrame("EditBox", nil, info, "InputBoxTemplate"); Size(invSearch, 390, 20); invSearch:SetPoint("TOPLEFT", info, "TOPLEFT", 22, -60)
-    invSearch:SetAutoFocus(false)
-    invSearch:SetScript("OnTextChanged", function() if currentTab == "inventory" then RefreshInfo() end end)
-    invSearch:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
-    RefreshLabels()
+CreatePage = function()
+    page = CreateFrame("Frame", nil, mainArea); page:SetAllPoints(mainArea)
+    page:SetFrameLevel((tonumber(chatPanel:GetFrameLevel()) or 1) + 8); page:EnableMouse(true)
+    Parchment(page)
+    pageSearchLabel = page:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall"); pageSearchLabel:SetPoint("TOPLEFT", page, "TOPLEFT", 16, -15)
+    pageSearchLabel:SetTextColor(0.36, 0.21, 0.05, 1); Reg(pageSearchLabel, "invSearchLabel", false, 11)
+    pageSearch = CreateFrame("EditBox", nil, page, "InputBoxTemplate"); Size(pageSearch, 300, 20); pageSearch:SetPoint("LEFT", pageSearchLabel, "RIGHT", 12, 0)
+    pageSearch:SetAutoFocus(false)
+    pageSearch:SetScript("OnTextChanged", function() if currentTab == "character" then pageDirty = true end end)
+    pageSearch:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    pageView = TextView(page, 462); pageView.text:SetTextColor(0.17, 0.10, 0.04, 1); pageView.scroll:Show()
+    descBtn = MakeButton(page, nil, 320, 24, function() RequestQuestDesc() end); descBtn:SetPoint("BOTTOM", page, "BOTTOM", 0, 10); descBtn:Hide()
+    patchGetBtn = MakeButton(page, nil, 320, 24, function() RequestPatch() end); patchGetBtn:SetPoint("BOTTOM", page, "BOTTOM", 0, 10); patchGetBtn:Hide()
+    page:Hide()
 end
 
 CreateUI = function()
@@ -1058,11 +1103,13 @@ CreateUI = function()
     local gearBtn = IconButton(frame, IconText("settings", 16), 28, 24, "settings", function() ToggleMenu(gearMenu) end); gearBtn:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -12, -30)
     local popBtn = IconButton(frame, "↗", 28, 24, "popout", function() PopOut() end); popBtn:SetPoint("RIGHT", gearBtn, "LEFT", -4, 0)
     local patchBtn = MakeButton(frame, "patch", 116, 24, function()
+        if currentTab == "patch" then SelectTab("chat"); return end
         local stale = not DB.patchAt or ((time and time() or 0) - DB.patchAt) > 43200
         if stale then RequestPatch() end
         SelectTab("patch")
-    end, 12, "patch"); patchBtn:SetPoint("RIGHT", popBtn, "LEFT", -4, 0)
-    local charBtn = MakeButton(frame, "character", 100, 24, function() SelectTab("character") end, 12, "character"); charBtn:SetPoint("RIGHT", patchBtn, "LEFT", -4, 0)
+    end, 12, "patch"); patchBtn:SetPoint("RIGHT", popBtn, "LEFT", -4, 0); topPatchBtn = patchBtn
+    local charBtn = MakeButton(frame, "character", 100, 24, function() SelectTab(currentTab == "character" and "chat" or "character") end, 12, "character")
+    charBtn:SetPoint("RIGHT", patchBtn, "LEFT", -4, 0); topCharBtn = charBtn
 
     -- chat area
     mainArea = CreateFrame("Frame", nil, frame); mainArea:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -60); mainArea:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -12, 12)
@@ -1072,6 +1119,7 @@ CreateUI = function()
     local pnote = placeholder:CreateFontString(nil, "OVERLAY", "GameFontNormal"); pnote:SetPoint("CENTER", placeholder, "CENTER", 0, 20); Reg(pnote, "poppedNote", false, 13)
     local pback = MakeButton(placeholder, "dock", 180, 26, function() Dock() end, 12); pback:SetPoint("TOP", pnote, "BOTTOM", 0, -12)
     placeholder:Hide()
+    CreatePage()
 
     -- chat history menu
     histMenu = MakeMenu(240, 280)
@@ -1158,6 +1206,7 @@ BINDING_NAME_LAMBOGUIDE_ASKHOVER = "Fare altındakini sor / Ask about hovered"
 local function TagInput(tag)
     if not (inputBox and frame) then return false end
     if not frame:IsShown() and not (popFrame and popFrame:IsShown()) then PopOut() end
+    if currentTab ~= "chat" then SelectTab("chat") end
     inputBox:SetFocus()
     local cur = inputBox:GetText() or ""
     inputBox:Insert((cur ~= "" and not cur:find("%s$") and " " or "") .. tag .. " ")
@@ -1323,6 +1372,7 @@ events:SetScript("OnEvent", function(_, event)
             local now = GetTime and GetTime() or 0
             if link == lastLink and now - lastAt < 0.2 then return end
             lastLink, lastAt = link, now
+            if currentTab ~= "chat" then SelectTab("chat") end
             inputBox:SetFocus()
             inputBox:Insert(link .. " ")
             -- Blizzard does not know our box took the link, so on a stack it also opens "split stack": close it again
@@ -1338,9 +1388,9 @@ events:SetScript("OnEvent", function(_, event)
             if ChatEdit_InsertLink then pcall(hooksecurefunc, "ChatEdit_InsertLink", InsertHook) end
             if ChatFrameUtil and ChatFrameUtil.InsertLink then pcall(hooksecurefunc, ChatFrameUtil, "InsertLink", InsertHook) end
         end
-    elseif info and info:IsShown() then
-        RefreshInfo()
+    elseif page and page:IsShown() then
+        if (GetTime and GetTime() or 0) - lastPageRefresh > 0.5 then pageDirty = true end   -- our own refresh also fires quest events
     end
 end)
 
-LamboGuideTest = { HasSavedChats = function() return HasSavedChats() end, NewChat = function() return NewChat() end, QuestText = function() return QuestText() end, RequestQuestDesc = function() return RequestQuestDesc() end, RequestPatch = function() return RequestPatch() end, HandlePatch = function(...) return HandlePatch(...) end, PatchText = function() return PatchText() end, HandleQuestDesc = function(...) return HandleQuestDesc(...) end, KeyTaken = function(...) return KeyTaken(...) end, TagInput = function(...) return TagInput(...) end, Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, DeliveryWatch = function(...) return DeliveryWatch(...) end, ThinkingTick = function(now) ThinkingTick(now); return thinkFS and thinkFS:GetText() end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }
+LamboGuideTest = { SelectTab = function(id) SelectTab(id) end, PageState = function() return { tab = currentTab, shown = page and page:IsShown() or false, text = pageView and pageView.text:GetText() or "" } end, HasSavedChats = function() return HasSavedChats() end, NewChat = function() return NewChat() end, QuestText = function() return QuestText() end, RequestQuestDesc = function() return RequestQuestDesc() end, RequestPatch = function() return RequestPatch() end, HandlePatch = function(...) return HandlePatch(...) end, PatchText = function() return PatchText() end, HandleQuestDesc = function(...) return HandleQuestDesc(...) end, KeyTaken = function(...) return KeyTaken(...) end, TagInput = function(...) return TagInput(...) end, Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, DeliveryWatch = function(...) return DeliveryWatch(...) end, ThinkingTick = function(now) ThinkingTick(now); return thinkFS and thinkFS:GetText() end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }

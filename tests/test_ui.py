@@ -94,7 +94,7 @@ inbox = "(function() for _, o in ipairs(__created()) do if o._kind == 'EditBox' 
 
 ask = """
 local input
-for _, o in ipairs(__created()) do if o._kind == "EditBox" then input = o end end
+for _, o in ipairs(__created()) do if o._kind == "EditBox" and o._scripts.OnEnterPressed then input = o end end
 input:SetText("%s")
 input._scripts.OnEnterPressed(input)
 """
@@ -169,4 +169,13 @@ assert lua.eval("#LamboGuideDB.chats[LamboGuideDB.currentChat].messages") == msg
 T.HandlePatch("**12 Kasim**: Warrior dengesi {url:https://example.com/p;Kaynak}")
 txt = T.PatchText()
 assert "12 Kasim" in txt and "Kaynak" in txt and "{url" not in txt, txt
+# one page inside the main window: character + quests + jobs + bags together, parchment colours, back to chat on tagging
+T.SelectTab("character")
+st = T.PageState()
+assert st["shown"] and st["tab"] == "character"
+assert "The Red Crystal" in st["text"] and "|cff7a2e00" in st["text"] and "|cffffd36a" not in st["text"], st["text"][:300]
+T.SelectTab("patch")
+assert T.PageState()["tab"] == "patch" and "12 Kasim" in T.PageState()["text"]
+lua.execute("INPUT:SetText(''); GameTooltip:Show(); LamboGuide_AskHovered()")
+assert T.PageState()["tab"] == "chat" and not T.PageState()["shown"], "tagging must go back to the chat"
 print("ui 0.7.3 OK")

@@ -84,7 +84,7 @@ assert lua.eval("LamboGuideTest.UsingMailbox()"), "addon did not switch to the m
 M = g.LamboGuideMailbox
 ask = """
 local input
-for _, o in ipairs(__created()) do if o._kind == "EditBox" then input = o end end
+for _, o in ipairs(__created()) do if o._kind == "EditBox" and o._scripts.OnEnterPressed then input = o end end
 input:SetText("%s")
 input._scripts.OnEnterPressed(input)
 """

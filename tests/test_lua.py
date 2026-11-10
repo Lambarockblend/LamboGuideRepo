@@ -76,7 +76,7 @@ SlashCmdList["LAMBOGUIDE"]("")
 assert(LamboGuideFrame._shown, "frame not shown")
 -- type + send question
 local input
-for _, o in ipairs(__created()) do if o._kind == "EditBox" then input = o end end
+for _, o in ipairs(__created()) do if o._kind == "EditBox" and o._scripts.OnEnterPressed then input = o end end
 input:SetText("Su an neredeyim? \196\159\195\188\197\159")
 input._scripts.OnEnterPressed(input)
 local chat = LamboGuideDB.chats[1]
