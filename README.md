@@ -12,7 +12,8 @@ WoW Forever'a özel bilgilerle cevaplar. Cevaplar kendi ChatGPT hesabınla üret
 - **Soru sor, cevap oyuna gelsin.** `/lg` ya da sağ alttaki **LG** düğmesi. Cevap kendiliğinden pencereye düşer.
 - **Kaynaklı cevaplar.** Her cevabın altında kaynak düğmeleri çıkar (tıkla → adres kopyalama kutusu).
 - **Harita işareti + yön oku.** Cevaptaki "Haritada: …" düğmesi haritaya işaret koyar, ok mesafeyi gösterir. `/lg ok` kapatır.
-- **Eşya sor.** Soru kutusu açıkken eşyaya Shift+tık, ya da Ayarlar > "Fare altını sor" ile atadığın tuş.
+- **Eşya sor, karşılaştır.** Eşyaya (ya da büyüye) Shift+tık ile birden fazlasını sohbet kutusuna bağla, soruyu kendin yaz. Ayarlar > "Fare altını ekle" ile atadığın tuş fare altındakini aynı şekilde etiketler (oyunun kullandığı tuşlar reddedilir, Alt+tuş öner).
+- **Tek pencere, iki sayfa.** Karakter sayfası: karakter, aktif görevler (kısa açıklamalarıyla), meslekler, envanter araması. Yama Notları sayfası. Papirüs görünümü.
 - **"Bu eşya daha iyi mi?"** Eşya ipucunda, giydiğinle öncelikli statlarda karşılaştırma (`/lg gear`).
 - **Envanter.** Tüm karakterlerinin çanta, banka ve parası (`/lg envanter`), eşya ipucunda toplam adet.
 - **Oturum bilgisi, müzayede fiyat hafızası, seviye ve zindan notları, önerilen addonlar** (`/lg addon`).
@@ -76,7 +77,8 @@ game with Forever-specific guidance. Answers are produced with your own ChatGPT 
 It is **read-only**: it never plays, presses keys or moves your character. Fan project, not affiliated with Blizzard.
 
 **Features:** answers arrive in the game window by themselves · source buttons under every answer · map marker and
-direction arrow · ask about an item (Shift+click or a hover key) · "is this item better?" tooltip line · inventory of
+direction arrow · tag several items with Shift+click (or a hover key) and ask your own question · Character page
+(quests with short descriptions, professions, inventory) and Patch Notes page · "is this item better?" tooltip line · inventory of
 all your characters · session stats, auction price memory, level and dungeon notes · Turkish / English.
 
 **Install:** download `LamboGuide-Setup-<version>.exe` from the [latest release](../../releases/latest) and run it

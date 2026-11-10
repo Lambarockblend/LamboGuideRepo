@@ -14,9 +14,15 @@ Ne yapar / What it does
 - Karakterini okur (ırk, sınıf, seviye, bölge, görevler, çanta, meslekler) ve
   sorularını kendi ChatGPT hesabınla (API anahtarı gerekmez) cevaplar.
 - Cevaplar rehber sitelerinden derlenir, kaynak bağlantılarıyla gelir.
-- Harita işareti + yön oku, fare altındaki eşyayı sorma, tüm karakterlerin envanteri,
-  müzayede fiyat hafızası, seviye/zindan notları.
+- Harita işareti + yön oku; Shift+tık ile birden fazla eşyayı sohbet kutusuna bağlayıp
+  karşılaştırma sorma, fare altı tuşu, tüm karakterlerin envanteri, müzayede fiyat hafızası,
+  seviye/zindan notları, yama notları, görevler için kısa açıklama.
+- Tek pencere, papirüs görünümlü Karakter ve Yama Notları sayfaları; Türkçe / İngilizce.
 - Oyunu senin yerine oynamaz: sadece okur ve öneri verir.
+
+In English: asks your own ChatGPT account (no API key), source buttons under every answer, map marker + arrow,
+Shift+click several items into the chat box to compare them, hover-key tagging, account-wide inventory, auction
+price memory, level/dungeon notes, patch notes page, short quest descriptions, one parchment-style window.
 
 Lisans / License: GPL-3.0. Yapımcı / Made by: Lambarock.
 Blizzard ile bağlantısı olmayan hayran projesi / Fan project, not affiliated with Blizzard.
