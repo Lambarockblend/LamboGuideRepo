@@ -248,6 +248,12 @@ function M.Send(text, onDone)
     return true
 end
 
+-- Drop everything not delivered yet (the helper is not taking it). The next message starts cleanly with a new seq.
+function M.Clear()
+    S.cur = nil
+    S.out = {}
+end
+
 function M.Busy() return S.started and (S.cur ~= nil or #S.out > 0) end
 function M.Connected(now) return S.started and S.lastHeard ~= nil and (now - S.lastHeard) < 15 end
 function M.Progress() if S.cur then return S.cur.idx, #S.cur.chunks end end

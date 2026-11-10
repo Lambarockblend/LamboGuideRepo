@@ -18,10 +18,10 @@ local TEXT = {
         welcome="Karakterini, görevlerini veya çantandaki bir eşyayı sor. Bir eşyayı sormak için soru kutusuna tıkla ve eşyaya Shift+tıkla. Cevap hazır olunca kendiliğinden gelir.",
         settings="Ayarlar", popout="Sohbeti ayrı pencerede aç", language="Dil", poppedNote="Sohbet ayrı pencerede.", dock="Sohbeti geri getir", new_="Yeni sohbet",
         placeholder="Sorunu yaz ve Enter'a bas...", sending="Soru yardımcıya iletiliyor...",
-        sentWait="Soru gönderildi. Cevap hazır olunca kendiliğinden gelir.", noLink="Yardımcı programa bağlanılamadı. LamboGuide kurulumunu çalıştır, yardımcı açıkken oyunu bir kez tamamen kapatıp aç.",
+        sentWait="Soru gönderildi. Cevap hazır olunca kendiliğinden gelir.", helperOff="Soru iletilemedi: yardımcı program açık değil. Yardımcıyı aç (saatin yanındaki LG simgesi), sonra tekrar sor.", noLink="Yardımcı programa bağlanılamadı. LamboGuide kurulumunu çalıştır, yardımcı açıkken oyunu bir kez tamamen kapatıp aç.",
         replyOk="Cevap alındı.", busy="Önceki soru hâlâ iletiliyor, bekle.",
         hint="Yardımcı uygulama açık olmalı (saatin yanındaki LG simgesi).",
-        status_idle="Hazır", status_tx="İletiliyor", status_wait="Cevap bekleniyor", status_nolink="Yardımcı kurulu değil", status_ok="Cevap alındı", status_link="Yardımcı bağlı", status_nolink="Yardımcı bağlı değil", onMap="Haritada", inventory="Envanter", addonsRow="Önerilen addonlar", askLevelUp="Yeni seviyemde eğitmenden ne öğrenmeliyim, yetenek puanımı nereye vermeliyim ve sıradaki hedefim ne olmalı?", askDungeon="%s için kısa rehber: bosslar ve dikkat edilecekler, zindanın görevleri, karakterime uygun önemli ganimetler.", wpSet="Haritaya işaret kondu (M ile bak), ok yolu gösteriyor.", wpFail="Bu yere işaret konamadı.", hoverKey="Fare altını sor", none="Yok", pressKey="Bir tuşa bas (Esc: kaldır)", hoverNone="Fare bir eşyanın, büyünün veya birimin üstünde değil.", hoverAsk="Bu %s hakkında bilgi ver: karakterim için işe yarar mı, ne yapmalıyım?", hoverShow="Fare altı: %s", combatWait="Savaştan sonra tekrar dene.",
+        status_idle="Hazır", status_tx="İletiliyor", status_wait="Cevap bekleniyor", status_ok="Cevap alındı", status_link="Yardımcı bağlı", status_nolink="Yardımcı bağlı değil", onMap="Haritada", inventory="Envanter", addonsRow="Önerilen addonlar", askLevelUp="Yeni seviyemde eğitmenden ne öğrenmeliyim, yetenek puanımı nereye vermeliyim ve sıradaki hedefim ne olmalı?", askDungeon="%s için kısa rehber: bosslar ve dikkat edilecekler, zindanın görevleri, karakterime uygun önemli ganimetler.", wpSet="Haritaya işaret kondu (M ile bak), ok yolu gösteriyor.", wpFail="Bu yere işaret konamadı.", hoverKey="Fare altını sor", none="Yok", pressKey="Bir tuşa bas (Esc: kaldır)", hoverNone="Fare bir eşyanın, büyünün veya birimin üstünde değil.", hoverAsk="Bu %s hakkında bilgi ver: karakterim için işe yarar mı, ne yapmalıyım?", hoverShow="Fare altı: %s", combatWait="Savaştan sonra tekrar dene.",
         patchQuery="WoW: Forever resmi yama ve hotfix notlarını web'de ara. En yeni önce olacak şekilde tarih, başlık, değişiklik özeti ve kaynak bağlantılarını listele. Retail ve Classic Era ile karıştırma.",
         patchShow="Son yama notları", pingShow="Bağlantı testi",
         charTitle="KARAKTER", gear="GİYİLİ EŞYALAR", bags="ÇANTA", activeQuests="AKTİF GÖREVLER",
@@ -38,10 +38,10 @@ local TEXT = {
         welcome="Ask about your character, quests or an item in your bags. To ask about an item, click the input box and Shift+click the item. The answer arrives by itself when ready.",
         settings="Settings", popout="Open chat in its own window", language="Language", poppedNote="Chat is in its own window.", dock="Bring chat back", new_="New chat",
         placeholder="Type your question and press Enter...", sending="Sending question to the helper...",
-        sentWait="Question sent. The answer arrives by itself when ready.", noLink="No link to the helper app. Run the LamboGuide installer, then fully restart the game once while the helper is running.",
+        sentWait="Question sent. The answer arrives by itself when ready.", helperOff="The question could not be sent: the helper app is not running. Start it (LG icon next to the clock), then ask again.", noLink="No link to the helper app. Run the LamboGuide installer, then fully restart the game once while the helper is running.",
         replyOk="Answer received.", busy="The previous question is still being sent, please wait.",
         hint="The helper app must be running (LG icon next to the clock).",
-        status_idle="Ready", status_tx="Sending", status_wait="Waiting for answer", status_nolink="Helper is not installed", status_ok="Answer received", status_link="Helper connected", status_nolink="Helper not connected", onMap="On map", inventory="Inventory", addonsRow="Recommended addons", askLevelUp="At my new level, what should I learn from the trainer, where should my talent points go and what should I do next?", askDungeon="Short guide for %s: bosses and what to watch for, the dungeon quests, and important loot for my character.", wpSet="Map marker set (press M), the arrow shows the way.", wpFail="Could not mark this place.", hoverKey="Ask hovered", none="None", pressKey="Press a key (Esc: remove)", hoverNone="The mouse is not over an item, spell or unit.", hoverAsk="Tell me about this %s: is it useful for my character, what should I do?", hoverShow="Hovered: %s", combatWait="Try again after combat.",
+        status_idle="Ready", status_tx="Sending", status_wait="Waiting for answer", status_ok="Answer received", status_link="Helper connected", status_nolink="Helper not connected", onMap="On map", inventory="Inventory", addonsRow="Recommended addons", askLevelUp="At my new level, what should I learn from the trainer, where should my talent points go and what should I do next?", askDungeon="Short guide for %s: bosses and what to watch for, the dungeon quests, and important loot for my character.", wpSet="Map marker set (press M), the arrow shows the way.", wpFail="Could not mark this place.", hoverKey="Ask hovered", none="None", pressKey="Press a key (Esc: remove)", hoverNone="The mouse is not over an item, spell or unit.", hoverAsk="Tell me about this %s: is it useful for my character, what should I do?", hoverShow="Hovered: %s", combatWait="Try again after combat.",
         patchQuery="Search the web for official WoW: Forever patch and hotfix notes. List newest first with date, title, short change summary and source links. Do not mix in Retail or Classic Era.",
         patchShow="Latest patch notes", pingShow="Link test",
         charTitle="CHARACTER", gear="EQUIPPED ITEMS", bags="BAGS", activeQuests="ACTIVE QUESTS",
@@ -294,6 +294,8 @@ local tabs, currentTab = {}, "character"
 local widgets = {}                       -- localized widgets {w=, key=}
 local sideRows, chatRows = {}, {}
 local pendingMsg, pendingDelete = nil, nil
+local txReq, txSince = nil, 0          -- question on its way to the helper (nil once the helper took it)
+local DELIVER_TIMEOUT = 20             -- seconds; a running helper takes a question in 1-3 s
 local MBX, useMailbox = LamboGuideMailbox, false
 local RenderChat, RenderSidebar, SelectTab, RefreshLabels, SetStatus, RefreshInfo, CreateUI, CreateInfo, Dock, PopOut
 
@@ -317,6 +319,31 @@ SetStatus = function(key, extra)
 end
 
 ---------------------------------------------------------------- sending
+local function SendHello()
+    MBX.Send("H1 zip=" .. ((C_EncodingUtil and C_EncodingUtil.DecompressString) and "1" or "0"))
+end
+
+-- The helper did not take the question in time (not running): free the queue and say so, instead of
+-- leaving "previous question is still being sent" forever (seen in game 2026-11-11).
+local function DeliveryWatch(now)
+    if not txReq or (now - txSince) < DELIVER_TIMEOUT then return false end
+    txReq = nil
+    MBX.Clear(); SendHello()                       -- the hello stays queued, so the link comes up when the helper starts
+    MBX.expecting = false
+    DB.awaitingReq = nil
+    if pendingMsg then pendingMsg.text = T("helperOff") end
+    pendingMsg = nil
+    SetStatus("status_nolink")
+    if frame and frame:IsShown() then RenderChat() end
+    return true
+end
+do
+    local watch = CreateFrame and CreateFrame("Frame")
+    if watch and watch.SetScript then
+        watch:SetScript("OnUpdate", function() if txReq and GetTime then DeliveryWatch(GetTime()) end end)
+    end
+end
+
 local function BeginTransmit(question, kind, extra)
     local effort = EFFORTS[DB.effort or 2] or "medium"
     local lang = DB.language == "en" and "English" or "Turkish"
@@ -337,7 +364,9 @@ local function BeginTransmit(question, kind, extra)
         return
     end
     MBX.expecting = true
+    txReq, txSince = DB.request, GetTime and GetTime() or 0
     MBX.Send("Q" .. DB.request .. "\n" .. text, function()
+        txReq = nil
         if pendingMsg then pendingMsg.text = T("sentWait") end
         SetStatus("status_wait")
         if frame and frame:IsShown() then RenderChat() end
@@ -374,7 +403,7 @@ local function SendQuestion(text, shown, kind, extra)
     end
     text = text:gsub("|c%x%x%x%x%x%x%x%x|H.-|h(%[.-%])|h|r", "%1"):gsub("|H.-|h(%[.-%])|h", "%1")
     if text == "" then return end
-    if useMailbox and MBX.Busy() then if statusText then statusText:SetText(C.gold .. Tx("busy") .. C.reset) end; return end
+    if useMailbox and txReq then if statusText then statusText:SetText(C.gold .. Tx("busy") .. C.reset) end; return end
     text = Utf8Prefix(text, 450)
     AddUserMessage(text, shown)
     if inputBox then inputBox:SetText(""); inputBox:ClearFocus() end
@@ -1032,7 +1061,7 @@ events:SetScript("OnEvent", function(_, event)
             end
             MBX.onError = function(err) if DB.debug then print("LamboGuide: " .. tostring(err)) end end
             MBX.expecting = DB.awaitingReq ~= nil
-            MBX.Send("H1 zip=" .. ((C_EncodingUtil and C_EncodingUtil.DecompressString) and "1" or "0"))
+            SendHello()
         end
         SLASH_LAMBOGUIDE1 = "/lg"; SLASH_LAMBOGUIDE2 = "/lamboguide"
         SlashCmdList["LAMBOGUIDE"] = function(msg)
@@ -1096,4 +1125,4 @@ events:SetScript("OnEvent", function(_, event)
     end
 end)
 
-LamboGuideTest = { Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }
+LamboGuideTest = { Context = function() return CompactContext() end, UsingMailbox = function() return useMailbox end, FmtReply = function(...) return FmtReply(...) end, FmtUser = function(...) return FmtUser(...) end, DeliveryWatch = function(...) return DeliveryWatch(...) end, Utf8Prefix = Utf8Prefix, ToASCII = ToASCII, HandleReply = function(...) return HandleReply(...) end }
