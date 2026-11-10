@@ -41,8 +41,12 @@ jobs:
           New-Item -ItemType Directory -Force build\bin, build\codex | Out-Null
           gh release download --repo openai/codex --pattern "codex-x86_64-pc-windows-msvc.exe.zip" --dir build\codex
           Expand-Archive build\codex\*.zip -DestinationPath build\codex -Force
-          $exe = Get-ChildItem build\codex -Recurse -Filter "codex*.exe" | Select-Object -First 1
-          Copy-Item $exe.FullName build\bin\codex.exe
+          Get-ChildItem build\codex -Recurse -Filter "*.exe" | ForEach-Object { Write-Host "in zip: $($_.Name)" }
+          # the main CLI is the file named like the zip; helper binaries in the same zip (sandbox runner, ...) stay next to it
+          $main = Get-ChildItem build\codex -Recurse -Filter "codex-x86_64-pc-windows-msvc.exe" | Select-Object -First 1
+          if (-not $main) { $main = Get-ChildItem build\codex -Recurse -Filter "codex.exe" | Select-Object -First 1 }
+          Copy-Item $main.FullName build\bin\codex.exe
+          Get-ChildItem build\codex -Recurse -Filter "*.exe" | Where-Object { $_.FullName -ne $main.FullName } | ForEach-Object { Copy-Item $_.FullName build\bin\ }
           Invoke-WebRequest https://raw.githubusercontent.com/openai/codex/main/LICENSE -OutFile build\bin\CODEX-LICENSE.txt
           build\bin\codex.exe --version
 
@@ -59,11 +63,17 @@ jobs:
         run: python packaging\build_curseforge.py --version ${{ env.VERSION }} --out dist
 
       - name: Publish release
-        if: startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         run: |
-          gh release create "${{ github.ref_name }}" "dist\LamboGuide-Setup-$env:VERSION.exe" "dist\LamboGuide-$env:VERSION-curseforge.zip" `
-            --title "LamboGuide $env:VERSION" --notes-file packaging\RELEASE_NOTES.md
+          $tag = "v$env:VERSION"
+          $files = @("dist\LamboGuide-Setup-$env:VERSION.exe", "dist\LamboGuide-$env:VERSION-curseforge.zip")
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $files --clobber
+            gh release edit $tag --title "LamboGuide $env:VERSION" --notes-file packaging\RELEASE_NOTES.md
+          } else {
+            gh release create $tag $files --target "${{ github.sha }}" --title "LamboGuide $env:VERSION" --notes-file packaging\RELEASE_NOTES.md
+          }
 
       - uses: actions/upload-artifact@v4
         with:
