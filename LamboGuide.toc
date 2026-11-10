@@ -1,0 +1,15 @@
+## Interface: 16001
+## Title: LamboGuide
+## Notes: WoW Forever AI guide by Lambarock (read-only, TR/EN)
+## Author: Lambarock
+## Category: LamboGuide
+## Version: 0.7.1
+## SavedVariables: LamboGuideDB
+## OptionalDeps: Questie, QuestieDB, TomTom, Auctionator
+
+Mailbox.lua
+Knowledge.lua
+GearData.lua
+Gear.lua
+Extras.lua
+Core.lua

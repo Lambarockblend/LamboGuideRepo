@@ -1,0 +1,282 @@
+{
+ "format": 1,
+ "class": "warrior",
+ "exported": "2026-11-09",
+ "facts": [
+  {
+   "fact": "Warrior levels slowly alone: almost no self-healing and no real crowd control, and higher-level mobs are hard to beat solo.",
+   "topic": "leveling",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Warrior shines in dungeons and groups thanks to strong cleave; grouping with a healer speeds leveling a lot.",
+   "topic": "leveling",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Your weapon decides nearly all of your damage while leveling, so replace it whenever a better one shows up.",
+   "topic": "gear",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Run dungeons while leveling: they give the weapon upgrades a Warrior needs to keep up with mobs.",
+   "topic": "pve",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Trainer at level 1 teaches Battle Shout and Heroic Strike; keep Battle Shout active the whole time.",
+   "topic": "abilities",
+   "class": "warrior",
+   "race": "",
+   "levels": "1",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Level 4 brings Rend and Charge; level 6 adds Thunder Clap for groups of enemies.",
+   "topic": "abilities",
+   "class": "warrior",
+   "race": "",
+   "levels": "4-6",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Hamstring arrives at 8 and slows a target, handy for kiting or stopping runners.",
+   "topic": "abilities",
+   "class": "warrior",
+   "race": "",
+   "levels": "8",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "At 10 you get Bloodrage, and the starting-zone class quest gives Defensive Stance, Taunt and Sunder Armor.",
+   "topic": "quests",
+   "class": "warrior",
+   "race": "",
+   "levels": "10",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Level 12 adds Overpower and Shield Bash; level 14 adds Revenge, Demoralizing Shout and Tactical Mastery.",
+   "topic": "abilities",
+   "class": "warrior",
+   "race": "",
+   "levels": "12-14",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Level 20 is a big step: Victory Rush (small heal), Cleave, Retaliation, Slam, Dual Wield and Polearms.",
+   "topic": "abilities",
+   "class": "warrior",
+   "race": "",
+   "levels": "20",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Execute is learned at 24, Shield Wall at 28 and Whirlwind at 36.",
+   "topic": "abilities",
+   "class": "warrior",
+   "race": "",
+   "levels": "24-36",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "At 30 a class quest on Fray Island near Ratchet unlocks Berserker Stance and Intercept.",
+   "topic": "quests",
+   "class": "warrior",
+   "race": "",
+   "levels": "30",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "The Whirlwind Axe quest in Alterac Mountains starts around 30 but is very hard at that level; buy its materials or bring a stronger friend.",
+   "topic": "quests",
+   "class": "warrior",
+   "race": "",
+   "levels": "30",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Level 40 unlocks Plate armor, Apprentice Riding and a second talent spec; Recklessness comes at 50.",
+   "topic": "abilities",
+   "class": "warrior",
+   "race": "",
+   "levels": "40-50",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Before 30 talents do not matter much: spend spare Rage on Heroic Strike, keep Rend up and open with Charge.",
+   "topic": "talents",
+   "class": "warrior",
+   "race": "",
+   "levels": "1-30",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "For solo leveling a shield Protection build is safest: Revenge, Rend and Thunder Clap on cooldown handle packs.",
+   "topic": "talents",
+   "class": "warrior",
+   "race": "",
+   "levels": "10-30",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "For group leveling Arms with a slow two-hander works well; Sweeping Strikes adds cleave and Mortal Strike is the finisher talent.",
+   "topic": "talents",
+   "class": "warrior",
+   "race": "",
+   "levels": "20-40",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Rage gain depends on weapon speed, not damage; don't waste Rage and switch stances when a fight needs it (switching costs Rage).",
+   "topic": "mechanics",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Defensive Stance lowers damage taken and raises threat; Berserker raises crit but you take more damage; Battle is neutral.",
+   "topic": "mechanics",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Use Intimidating Shout, Retaliation and Shield Wall freely on big pulls; they are what makes fast Warrior leveling safe.",
+   "topic": "mechanics",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Stat order while leveling: weapon DPS first, then Strength/Attack Power, Stamina, Agility and Armor.",
+   "topic": "gear",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Warriors need no reagents; eat cooked food for its XP buff and keep stat elixirs for hard fights.",
+   "topic": "mechanics",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Mining + Blacksmithing suits Warrior: Blacksmithing makes Weapon Stones for flat extra damage.",
+   "topic": "professions",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Skinning gives early gold toward the level 40 mount; First Aid bandages help in rough fights.",
+   "topic": "professions",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+   "site": "method.gg",
+   "title": "Method: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  },
+  {
+   "fact": "Cooking is useful in Forever because food gives XP and professions grant camp buffs.",
+   "topic": "professions",
+   "class": "warrior",
+   "race": "",
+   "levels": "",
+   "url": "https://www.warcrafttavern.com/forever/guides/warrior-leveling/",
+   "site": "warcrafttavern.com",
+   "title": "Warcraft Tavern: WoW Forever Warrior Leveling Guide",
+   "created": "2026-11-09"
+  }
+ ]
+}

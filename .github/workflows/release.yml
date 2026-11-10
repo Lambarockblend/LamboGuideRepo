@@ -1,0 +1,73 @@
+# Builds LamboGuide-Setup-<version>.exe and the CurseForge addon zip on a Windows runner.
+# Trigger: push a tag like v0.7.1 (or run it by hand from the Actions tab).
+name: release
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version from tag
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart("v")
+          if (-not ($v -match '^\d+\.\d+')) { $v = (Get-Content version.json | ConvertFrom-Json).version }
+          "VERSION=$v" | Out-File -FilePath $env:GITHUB_ENV -Append
+          $j = Get-Content version.json | ConvertFrom-Json
+          $j.version = $v; $j.repo = "${{ github.repository }}"
+          $j | ConvertTo-Json | Set-Content version.json -Encoding utf8
+          (Get-Content LamboGuide.toc) -replace '^## Version: .*', "## Version: $v" | Set-Content LamboGuide.toc -Encoding utf8
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python packages
+        run: pip install pyinstaller pystray pillow
+
+      - name: Bundle Codex CLI (Apache-2.0)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force build\bin, build\codex | Out-Null
+          gh release download --repo openai/codex --pattern "codex-x86_64-pc-windows-msvc.exe.zip" --dir build\codex
+          Expand-Archive build\codex\*.zip -DestinationPath build\codex -Force
+          $exe = Get-ChildItem build\codex -Recurse -Filter "codex*.exe" | Select-Object -First 1
+          Copy-Item $exe.FullName build\bin\codex.exe
+          Invoke-WebRequest https://raw.githubusercontent.com/openai/codex/main/LICENSE -OutFile build\bin\CODEX-LICENSE.txt
+          build\bin\codex.exe --version
+
+      - name: Build helper exe
+        run: pyinstaller --noconfirm packaging\LamboGuideHelper.spec --distpath dist --workpath build\pyi
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DMyVersion=$env:VERSION" packaging\LamboGuide.iss
+
+      - name: CurseForge zip
+        run: python packaging\build_curseforge.py --version ${{ env.VERSION }} --out dist
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          gh release create "${{ github.ref_name }}" "dist\LamboGuide-Setup-$env:VERSION.exe" "dist\LamboGuide-$env:VERSION-curseforge.zip" `
+            --title "LamboGuide $env:VERSION" --notes-file packaging\RELEASE_NOTES.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lamboguide-${{ env.VERSION }}
+          path: |
+            dist/LamboGuide-Setup-*.exe
+            dist/LamboGuide-*-curseforge.zip

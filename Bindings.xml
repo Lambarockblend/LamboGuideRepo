@@ -1,0 +1,5 @@
+<Bindings>
+    <Binding name="LAMBOGUIDE_ASKHOVER" header="LAMBOGUIDE">
+        LamboGuide_AskHovered()
+    </Binding>
+</Bindings>
