@@ -10,6 +10,9 @@ This addon alone is only the in-game interface. AI answers need the free
 "LamboGuide Setup" program (one click: addon + helper app + optional Questie):
   https://github.com/<GITHUB_REPO>/releases/latest
 
+Yardımcıyı kapattıysan Başlat menüsü/masaüstündeki "LamboGuide" kısayoluyla aç (simge saatin yanında, gizli oklarda olabilir).
+If you closed the helper, reopen it from the "LamboGuide" Start menu/desktop shortcut (icon is next to the clock, maybe under the ^ arrow).
+
 Ne yapar / What it does
 - Karakterini okur (ırk, sınıf, seviye, bölge, görevler, çanta, meslekler) ve
   sorularını kendi ChatGPT hesabınla (API anahtarı gerekmez) cevaplar.

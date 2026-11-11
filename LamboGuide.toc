@@ -3,7 +3,7 @@
 ## Notes: WoW Forever AI guide by Lambarock (read-only, TR/EN)
 ## Author: Lambarock
 ## Category: LamboGuide
-## Version: 0.7.3
+## Version: 0.7.4
 ## SavedVariables: LamboGuideDB
 ## OptionalDeps: Questie, QuestieDB, TomTom, Auctionator
 

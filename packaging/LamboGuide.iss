@@ -2,7 +2,7 @@
 ; Installs the helper, then the helper installs the addon, its link folders, Questie (optional)
 ; and Windows autostart. No admin rights needed.
 #ifndef MyVersion
-  #define MyVersion "0.7.3"
+  #define MyVersion "0.7.4"
 #endif
 
 [Setup]
@@ -33,6 +33,8 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 [CustomMessages]
 tr.Questie=Questie'yi de kur (önerilir: görev yerleri ve harita işaretleri)
 en.Questie=Also install Questie (recommended: quest locations and map markers)
+tr.Desktop=Masaüstüne kısayol koy
+en.Desktop=Create a desktop shortcut
 tr.Autostart=Yardımcı Windows ile birlikte açılsın (saatin yanında simge)
 en.Autostart=Start the helper with Windows (tray icon)
 tr.Installing=LamboGuide oyuna kuruluyor...
@@ -46,7 +48,12 @@ en.Restart=Important: if WoW is running, fully close and reopen it once. On firs
 
 [Tasks]
 Name: "questie"; Description: "{cm:Questie}"
+Name: "desktopicon"; Description: "{cm:Desktop}"
 Name: "autostart"; Description: "{cm:Autostart}"
+
+[Icons]
+Name: "{autoprograms}\LamboGuide"; Filename: "{app}\LamboGuideHelper.exe"; Parameters: "--tray"
+Name: "{autodesktop}\LamboGuide"; Filename: "{app}\LamboGuideHelper.exe"; Parameters: "--tray"; Tasks: desktopicon
 
 [Files]
 Source: "..\dist\LamboGuideHelper\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs

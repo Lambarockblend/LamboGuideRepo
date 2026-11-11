@@ -1,13 +1,16 @@
-## LamboGuide 0.7.3
+## LamboGuide 0.7.4
 
-**WoW: Forever için oyun içi yapay zekâ rehberi** — yapan Lambarock. İlk herkese açık sürüm.
-**In-game AI guide for WoW: Forever** — by Lambarock. First public release.
+**WoW: Forever için oyun içi yapay zekâ rehberi** — yapan Lambarock. 0.7.4: kurulum artık Başlat menüsüne ve masaüstüne LamboGuide kısayolu ekler (yardımcıyı kapatırsan buradan tekrar açarsın).
+**In-game AI guide for WoW: Forever** — by Lambarock. 0.7.4: the installer now adds a LamboGuide shortcut to the Start menu and desktop (reopen the helper from there if you close it).
 
-**Kurulum:** `LamboGuide-Setup-0.7.3.exe` dosyasını indirip çalıştır. Windows "bilinmeyen yayıncı" uyarısı verirse
+**Yardımcı kapandıysa:** Başlat menüsü veya masaüstündeki LamboGuide kısayoluna bas; saatin yanındaki (gizli oklar `^` içinde olabilir) LG simgesi görünür.
+**If the helper was closed:** open the LamboGuide shortcut (Start menu/desktop); the LG icon appears next to the clock (it may be under the `^` arrow).
+
+**Kurulum:** `LamboGuide-Setup-0.7.4.exe` dosyasını indirip çalıştır. Windows "bilinmeyen yayıncı" uyarısı verirse
 "Ek bilgi" > "Yine de çalıştır" (kurulum imzalı değil). Kurulumdan sonra WoW'u bir kez tamamen kapatıp aç, yardımcıda
 "Yapay zekâya bağlan"a bas ve ChatGPT girişini yap. Şifreni LamboGuide görmez.
 
-**Install:** download and run `LamboGuide-Setup-0.7.3.exe`. If Windows warns about an unknown publisher choose
+**Install:** download and run `LamboGuide-Setup-0.7.4.exe`. If Windows warns about an unknown publisher choose
 "More info" > "Run anyway" (the installer is unsigned). Fully restart WoW once, press "Connect to AI" in the helper
 and sign in to ChatGPT. LamboGuide never sees your password.
 
@@ -28,4 +31,4 @@ and sign in to ChatGPT. LamboGuide never sees your password.
 Yalnızca okur ve öneri verir; oyunu senin yerine oynamaz. Blizzard ile bağlantısı yoktur. Lisans: GPL-3.0.
 It only reads and suggests; it never plays for you. Not affiliated with Blizzard. License: GPL-3.0.
 
-`LamboGuide-0.7.3-curseforge.zip` yalnızca addonu içerir (CurseForge için). / Addon-only package (for CurseForge).
+`LamboGuide-0.7.4-curseforge.zip` yalnızca addonu içerir (CurseForge için). / Addon-only package (for CurseForge).
