@@ -190,6 +190,7 @@ class App:
         ttk.Combobox(opts, textvariable=self.effort, state="readonly", width=7, values=("Düşük", "Orta", "Yüksek")).pack(side="left", padx=(4, 0))
         opts2 = ttk.Frame(outer); opts2.pack(fill="x", pady=(0, 8))
         ttk.Button(opts2, text="Yama Notları", command=self._patch_notes).pack(side="left")
+        ttk.Button(opts2, text="Güncellemeyi kontrol et", command=self._update_now).pack(side="left", padx=(6, 0))
         ttk.Checkbutton(opts2, text="Üstte kal", variable=self.topmost, command=lambda: self.root.attributes("-topmost", self.topmost.get())).pack(side="left", padx=(10, 0))
 
         self.chat = ScrolledText(outer, wrap="word", height=14, font=("Segoe UI", 10), bg="#211e1a", fg="#eee4d1", insertbackground="#eee4d1", relief="flat", padx=11, pady=10)
@@ -366,6 +367,32 @@ class App:
         self._say("user", text)
         self._enqueue({"question": text, "context": self.last_context, "language": "English" if self.lang.get() == "EN" else "Turkish",
                        "effort": self._effort_value(), "model": self.model.get(), "kind": "ask", "source": "manual"})
+
+    def _update_now(self):
+        """Button / tray item: look for a newer release right now; the player confirms before it installs."""
+        def work():
+            try:
+                self.q.put(("upd", ("ok", UPD.check(HERE))))
+            except Exception as exc:
+                log("update: " + traceback.format_exc())
+                self.q.put(("upd", ("err", str(exc))))
+        threading.Thread(target=work, daemon=True).start()
+
+    def _update_result(self, val):
+        self.root.deiconify(); self.root.lift()
+        state, data = val
+        cur = UPD.load_version(HERE).get("version", "?")
+        if state == "err":
+            messagebox.showerror("LamboGuide", "Güncelleme kontrol edilemedi (internet?). " + data)
+        elif not data:
+            messagebox.showinfo("LamboGuide", f"Güncelsin. Sürüm {cur}.")
+        elif messagebox.askyesno("LamboGuide", f"Yeni sürüm var: {data['version']} (şu an {cur}).\nŞimdi güncellensin mi? Yardımcı kapanıp kendiliğinden yeniden açılır; addon da güncellenir."):
+            try:
+                if UPD.download_and_run(data, log):
+                    self.q.put(("quit", None))
+            except Exception as exc:
+                log("update: " + traceback.format_exc())
+                messagebox.showerror("LamboGuide", "Güncelleme indirilemedi. " + str(exc))
 
     def _patch_notes(self):
         en = self.lang.get() == "EN"
@@ -575,6 +602,8 @@ class App:
                 elif kind == "quit":
                     self._quit()
                     return
+                elif kind == "upd":
+                    self._update_result(val)
                 elif kind == "mailbox":
                     self._mailbox_message(val)
                 elif kind == "meta":
@@ -647,6 +676,7 @@ class App:
         d.rounded_rectangle((4, 4, 60, 60), 12, fill=(196, 150, 60, 255))
         d.text((20, 24), "LG", fill=(24, 18, 12, 255))
         menu = pystray.Menu(pystray.MenuItem("LamboGuide'ı göster", lambda *_: self.q.put(("show", None)), default=True),
+                            pystray.MenuItem("Güncellemeyi kontrol et", lambda *_: self.q.put(("show", None)) or self._update_now()),
                             pystray.MenuItem("Çıkış", lambda *_: self.q.put(("quit", None))))
         self.tray = pystray.Icon("LamboGuide", img, "LamboGuide", menu)
         threading.Thread(target=self.tray.run, daemon=True).start()

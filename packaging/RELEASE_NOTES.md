@@ -1,7 +1,7 @@
 ## LamboGuide 0.7.4
 
-**WoW: Forever için oyun içi yapay zekâ rehberi** — yapan Lambarock. 0.7.4: kurulum artık Başlat menüsüne ve masaüstüne LamboGuide kısayolu ekler (yardımcıyı kapatırsan buradan tekrar açarsın).
-**In-game AI guide for WoW: Forever** — by Lambarock. 0.7.4: the installer now adds a LamboGuide shortcut to the Start menu and desktop (reopen the helper from there if you close it).
+**WoW: Forever için oyun içi yapay zekâ rehberi** — yapan Lambarock. 0.7.4: kurulum artık Başlat menüsüne ve masaüstüne LamboGuide kısayolu ekler (yardımcıyı kapatırsan buradan tekrar açarsın). Yardımcıda "Güncellemeyi kontrol et" düğmesi (ve tepsi menüsünde aynısı): yeni sürüm varsa tek tıkla addon ve yardımcı güncellenir, baştan indirmek gerekmez.
+**In-game AI guide for WoW: Forever** — by Lambarock. 0.7.4: the installer now adds a LamboGuide shortcut to the Start menu and desktop (reopen the helper from there if you close it). New "Check for updates" button in the helper (and tray menu): one click updates addon and helper, no manual re-download.
 
 **Yardımcı kapandıysa:** Başlat menüsü veya masaüstündeki LamboGuide kısayoluna bas; saatin yanındaki (gizli oklar `^` içinde olabilir) LG simgesi görünür.
 **If the helper was closed:** open the LamboGuide shortcut (Start menu/desktop); the LG icon appears next to the clock (it may be under the `^` arrow).
