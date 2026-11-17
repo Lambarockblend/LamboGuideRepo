@@ -107,7 +107,7 @@ h2 { margin: 0; font: 400 26px var(--display); }
 .stats .big { font-size: 18px; }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 #tapHint {
-  position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 28px); z-index: 4; pointer-events: none;
+  position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 104px); z-index: 4; pointer-events: none;
   text-align: center; font: 700 16px var(--body); color: #fff; text-shadow: 0 2px 10px rgba(0,40,80,.5);
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   transition: opacity .6s;
@@ -837,6 +837,7 @@ h2 { margin: 0; font: 400 26px var(--display); }
     SC = clamp(Math.min(W, H) / 420, 0.75, 1.5);
     CX = W / 2; CY = H * 0.5; M = Math.min(W, H);
     glResize();
+    measureSafe();
     initAmbient();
   }
 
@@ -1060,6 +1061,9 @@ h2 { margin: 0; font: 400 26px var(--display); }
       tp.dur = Math.min(tp.sus, nx - tp.t - 0.08);
       if (tp.dur < 0.4) tp.kind = 'note';
     }
+    // şerit için: her dokunuşun kesirli vuruş konumu
+    const bAt = (t) => { let lo = 0, hi = beats.length - 1; while (lo < hi - 1) { const m = (lo + hi) >> 1; if (beats[m] <= t) lo = m; else hi = m; } return lo + (t - beats[lo]) / (beats[hi] - beats[lo]); };
+    for (const tp of taps) tp.fb = bAt(tp.t);
     return taps;
   }
 
@@ -1471,6 +1475,115 @@ h2 { margin: 0; font: 400 26px var(--display); }
     g.globalAlpha = 1;
   }
 
+  // ================= VURUŞ ŞERİDİ =================
+  // Altta 2 ölçü (8 vuruş). Işık şarkının saatiyle soldan sağa geçer; basılacak yerler türüne göre işaretli.
+  // Ölçü bitince şerit bir ölçü sola kayar, böylece her zaman en az bir ölçü ilerisi görünür.
+  let safeB = 0, stripOff = 0, stripTarget = 0;
+  function measureSafe() {
+    const pr = document.createElement('div');
+    pr.style.cssText = 'position:fixed;bottom:0;height:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden';
+    document.body.appendChild(pr); safeB = pr.getBoundingClientRect().height || 0; pr.remove();
+  }
+  // şarkı zamanı -> kesirli vuruş sırası
+  function beatAt(t) {
+    const b = song.beats; if (!b.length) return 0;
+    if (t <= b[0]) return (t - b[0]) / (b[1] - b[0]);
+    let lo = 0, hi = b.length - 1;
+    while (lo < hi - 1) { const m = (lo + hi) >> 1; if (b[m] <= t) lo = m; else hi = m; }
+    if (t >= b[hi]) return hi + (t - b[hi]) / (b[hi] - b[hi - 1]);
+    return lo + (t - b[lo]) / (b[hi] - b[lo]);
+  }
+  function drawStrip(tn, dt, c) {
+    if (!song || state !== 'play') return;
+    const th = TH(), light = th.light, neon = th.id === 'neon';
+    const gut = Math.max(16, 0), x0 = gut + 14, x1 = W - gut - 14, wpx = x1 - x0;
+    const y = H - safeB - 50 * Math.min(1.2, SC), BEATS = 8, bw = wpx / BEATS;
+    const fb = beatAt(c);
+    const firstBeat = song.taps.length ? Math.floor(song.taps[0].fb / 4) * 4 : 0;
+    stripTarget = Math.max(firstBeat - 4, Math.floor(fb / 4) * 4);
+    if (Math.abs(stripTarget - stripOff) > 8) stripOff = stripTarget;
+    stripOff += (stripTarget - stripOff) * Math.min(1, dt * 9);
+    const X = (b) => x0 + (b - stripOff) * bw;
+    // cam zemin
+    g.save();
+    const ph = 70 * Math.min(1.2, SC), py = y - ph / 2, pr = ph / 2;
+    g.beginPath();
+    g.moveTo(gut + pr, py); g.lineTo(W - gut - pr, py); g.arc(W - gut - pr, y, pr, -Math.PI / 2, Math.PI / 2); g.lineTo(gut + pr, py + ph); g.arc(gut + pr, y, pr, Math.PI / 2, Math.PI * 1.5); g.closePath();
+    g.fillStyle = light ? 'rgba(255,255,255,.38)' : 'rgba(255,255,255,.07)'; g.fill();
+    g.lineWidth = 1; g.strokeStyle = light ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.18)'; g.stroke();
+    g.clip();
+    // vuruş noktaları
+    const b0 = Math.floor(stripOff) - 1, b1 = Math.ceil(stripOff + BEATS) + 1;
+    const ink = light ? 'rgba(10,50,90,' : 'rgba(255,255,255,';
+    for (let b = b0; b <= b1; b++) {
+      const x = X(b), bar = b % 4 === 0;
+      const passed = fb >= b, flashA = clamp(1 - (fb - b) / 0.35, 0, 1) * (passed ? 1 : 0);
+      g.fillStyle = ink + (bar ? 0.55 : 0.32) + ')';
+      g.beginPath(); g.arc(x, y, (bar ? 3.4 : 2.4) * SC + flashA * 3 * SC, 0, TAU); g.fill();
+      if (bar) { g.fillStyle = ink + '0.15)'; g.fillRect(x - 0.5, py + 10, 1, ph - 20); }
+      g.fillStyle = ink + '0.18)'; g.beginPath(); g.arc(x + bw / 2, y, 1.4 * SC, 0, TAU); g.fill();
+    }
+    // basılacak noktalar
+    const taps = song.taps;
+    let i0 = Math.max(0, k - 6);
+    for (let i = i0; i < taps.length; i++) {
+      const tp = taps[i], x = X(tp.fb);
+      if (x > x1 + 40) break;
+      if (x < x0 - 40) continue;
+      const doneTap = i < k, isNext = i === k;
+      const h = th.hue[tp.kind === 'drum' ? (tp.sub === 'kick' ? 0 : 1) : 2];
+      const dist = tp.fb - fb;                        // vuruş cinsinden kalan
+      const near = isNext ? clamp(1 - dist / 1, 0, 1) : 0;
+      let al = doneTap ? clamp(1 - (fb - tp.fb) / 0.6, 0, 1) : 1;
+      if (al <= 0) continue;
+      const pop = doneTap ? 1 + (1 - al) * 0.8 : 1 + near * 0.35;
+      const r = 13 * SC * pop;
+      g.save(); g.globalAlpha = al * (doneTap ? 0.7 : 1);
+      if (tp.kind === 'hold') {
+        const xe = X(beatAt(tp.t + tp.dur));
+        g.lineCap = 'round'; g.lineWidth = r * 1.3;
+        g.strokeStyle = 'hsla(' + h + ',100%,' + (light ? 92 : 70) + '%,.55)';
+        g.beginPath(); g.moveTo(x, y); g.lineTo(Math.max(x + 1, xe), y); g.stroke();
+        bubbleBody(x, y, r, r, h, 1, tn);
+        glyph('♫', x, y, r * 0.95, 1, h, 0);
+      } else if (tp.kind === 'drum' && tp.sub === 'kick') {
+        // bas davul: dolu davul derisi
+        g.fillStyle = 'hsla(' + h + ',90%,' + (light ? 42 : 62) + '%,1)';
+        if (neon) { g.shadowColor = 'hsl(' + h + ',100%,60%)'; g.shadowBlur = 12; }
+        g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
+        g.shadowBlur = 0; g.lineWidth = 2; g.strokeStyle = 'rgba(255,255,255,.9)';
+        g.beginPath(); g.arc(x, y, r * 0.62, 0, TAU); g.stroke();
+      } else if (tp.kind === 'drum') {
+        // trampet / zil: elmas
+        g.fillStyle = 'hsla(' + h + ',90%,' + (light ? 45 : 68) + '%,1)';
+        if (neon) { g.shadowColor = 'hsl(' + h + ',100%,60%)'; g.shadowBlur = 12; }
+        g.beginPath(); g.moveTo(x, y - r * 1.1); g.lineTo(x + r * 0.9, y); g.lineTo(x, y + r * 1.1); g.lineTo(x - r * 0.9, y); g.closePath(); g.fill();
+        g.shadowBlur = 0; g.lineWidth = 1.5; g.strokeStyle = 'rgba(255,255,255,.9)'; g.stroke();
+      } else {
+        bubbleBody(x, y, r, r, h, 1, tn);
+        glyph('♪', x, y, r * 0.95, 1, h, 0);
+      }
+      // sıradaki: etrafında atan halka
+      if (isNext) {
+        const wv = waiting(ctx.currentTime) ? 0.5 + 0.5 * Math.sin(tn * 12) : near;
+        g.globalAlpha = 0.35 + 0.65 * wv;
+        g.lineWidth = 2.5 * SC; g.strokeStyle = light ? '#fff' : 'hsl(' + h + ',100%,80%)';
+        g.beginPath(); g.arc(x, y, r + 5 * SC + 3 * SC * wv, 0, TAU); g.stroke();
+      }
+      g.restore();
+    }
+    // ışık (imleç)
+    const cx = X(fb);
+    const cg = g.createLinearGradient(cx - 22 * SC, 0, cx + 6 * SC, 0);
+    cg.addColorStop(0, light ? 'rgba(255,255,255,0)' : 'rgba(255,255,255,0)');
+    cg.addColorStop(1, light ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.22)');
+    g.fillStyle = cg; g.fillRect(cx - 22 * SC, py, 28 * SC, ph);
+    g.fillStyle = light ? '#fff' : 'rgba(255,255,255,.95)';
+    if (!light) { g.shadowColor = '#fff'; g.shadowBlur = 10; }
+    g.fillRect(cx - 1.5, py + 8, 3, ph - 16);
+    g.restore();
+  }
+
   // ================= ANA DÖNGÜ =================
   let lastT = nowS();
   function frame() {
@@ -1535,6 +1648,7 @@ h2 { margin: 0; font: 400 26px var(--display); }
     drawBubbles(tn, dt);
     drawText(tn);
     g.restore();
+    if (song && state === 'play' && ctx) drawStrip(tn, dt, clockPos(ctx.currentTime - (ctx.outputLatency || ctx.baseLatency || 0)));
     if (redA > 0) {
       const rg = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
       rg.addColorStop(0, 'rgba(255,70,100,0)'); rg.addColorStop(1, 'rgba(255,70,100,' + redA + ')');
@@ -1575,7 +1689,7 @@ h2 { margin: 0; font: 400 26px var(--display); }
     el.innerHTML = first === 'hold'
       ? 'Uzun ses: parmağını kaldırma<small>Halka dolana kadar basılı tut, istersen gezdir.</small>'
       : first
-        ? 'Ekranın her yeri çalgı<small>Spiral nefes alıp en parlak olduğunda dokun. Ses parmağının değdiği an çıkar.</small>'
+        ? 'Alttaki ışık işarete gelince dokun<small>Ekranın her yerine dokunabilirsin. ● bas davul, ◆ trampet, ♪ nota, uzun çubuk basılı tut.</small>'
         : 'Şarkı seni bekliyor';
     el.hidden = false; el.style.opacity = 1;
     clearTimeout(hintT); hintT = setTimeout(hideTapHint, first ? 4500 : 2200);
