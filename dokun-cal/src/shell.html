@@ -1,0 +1,170 @@
+<title>Dokun Çal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@500;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Music&text=%E2%99%A9%E2%99%AA%E2%99%AB%E2%99%AC&display=swap">
+<style>
+/* Tam ekran tuval; arayüz camsı (Aero) paneller. Renkler oyun içi temadan gelir, sayfa tek görünüm. */
+:root {
+  --ink: #0b2a44;
+  --ink-soft: #3f6684;
+  --glass: rgba(255,255,255,.62);
+  --glass-edge: rgba(255,255,255,.9);
+  --accent: #1d9bf0;
+  --accent-2: #5fd38a;
+  --danger: #e2475f;
+  --sky: #2b9be0;
+  --display: "Varela Round", "Nunito", system-ui, sans-serif;
+  --body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0; overflow: hidden; background: var(--sky); color: var(--ink);
+  font-family: var(--body); -webkit-tap-highlight-color: transparent;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+#cv { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; display: block; }
+
+/* HUD */
+#hud {
+  position: fixed; left: 0; right: 0; top: 0; z-index: 5; pointer-events: none;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px;
+  transition: opacity .3s;
+}
+#hud.off { opacity: 0; }
+.hudL { display: flex; align-items: center; gap: 10px; }
+#menuBtn {
+  pointer-events: auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--glass-edge);
+  background: var(--glass); color: var(--ink); font: 700 16px var(--body); cursor: pointer;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: grid; place-items: center;
+}
+#menuBtn:focus-visible, .btn:focus-visible, .chip:focus-visible, .seg button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+#score { font: 400 26px var(--display); font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 2px 10px rgba(0,40,80,.45); }
+#prog { height: 5px; border-radius: 3px; background: rgba(255,255,255,.28); overflow: hidden; }
+#prog i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #fff, #c8f4ff); border-radius: 3px; }
+.hudR { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+#mult { font: 400 28px var(--display); color: #fff; text-shadow: 0 2px 12px rgba(0,40,80,.5); transition: transform .15s; }
+#mult.pop { transform: scale(1.35); }
+#combo { font: 700 12px var(--body); letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.85); margin-top: 3px; }
+
+/* Paneller */
+.ov {
+  position: fixed; inset: 0; z-index: 10; display: grid; place-items: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px; overflow-y: auto;
+}
+.card {
+  width: min(420px, 100%); box-sizing: border-box; padding: 26px 22px 22px; border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.58));
+  border: 1px solid var(--glass-edge); box-shadow: 0 20px 60px rgba(0,40,90,.25), inset 0 1px 0 #fff;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  display: flex; flex-direction: column; gap: 14px; text-align: center;
+}
+h1 { margin: 0; font: 400 40px/1 var(--display); letter-spacing: .01em; color: var(--ink); text-wrap: balance; }
+h1 .dot { color: var(--accent); }
+h2 { margin: 0; font: 400 26px var(--display); }
+.lead { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-soft); text-wrap: balance; }
+.btn {
+  appearance: none; border: 0; cursor: pointer; border-radius: 999px; padding: 15px 20px;
+  font: 900 17px var(--body); color: #fff;
+  background: linear-gradient(180deg, #6cc8ff 0%, #1d9bf0 48%, #0f7fd0 52%, #3fb0ff 100%);
+  box-shadow: 0 6px 18px rgba(16,120,200,.35), inset 0 1px 0 rgba(255,255,255,.7);
+  text-shadow: 0 1px 2px rgba(0,50,100,.35);
+}
+.btn.ghost { background: rgba(255,255,255,.7); color: var(--ink); text-shadow: none; box-shadow: inset 0 0 0 1px rgba(11,42,68,.15); }
+.btn.green { background: linear-gradient(180deg, #a6ef9f 0%, #4fc66d 48%, #33a956 52%, #6fdb86 100%); box-shadow: 0 6px 18px rgba(40,150,70,.3), inset 0 1px 0 rgba(255,255,255,.7); }
+.label { font: 900 11px var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: -6px; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.chip {
+  appearance: none; cursor: pointer; border: 2px solid transparent; border-radius: 999px; padding: 7px 14px 7px 7px;
+  display: flex; align-items: center; gap: 8px; font: 700 14px var(--body); color: var(--ink); background: rgba(255,255,255,.7);
+}
+.chip i { width: 22px; height: 22px; border-radius: 50%; display: block; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+.chip.on { border-color: var(--accent); background: #fff; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 999px; background: rgba(11,42,68,.08); }
+.seg button { appearance: none; border: 0; cursor: pointer; border-radius: 999px; padding: 9px 4px; font: 700 14px var(--body); color: var(--ink-soft); background: transparent; }
+.seg button.on { background: #fff; color: var(--ink); box-shadow: 0 2px 8px rgba(0,40,90,.15); }
+.hint { font-size: 13px; line-height: 1.45; color: var(--ink-soft); margin: 0; }
+.err { color: var(--danger); font-weight: 700; font-size: 14px; min-height: 0; }
+.err:empty { display: none; }
+.bar { height: 10px; border-radius: 6px; background: rgba(11,42,68,.1); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, #5fd38a, #1d9bf0); transition: width .15s; }
+.range { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.range input { flex: 1; min-width: 0; accent-color: var(--accent); }
+.range output { width: 64px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+.rank { font: 400 88px/1 var(--display); background: linear-gradient(180deg, #ffe680, #ffb020); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 4px 10px rgba(200,120,0,.35)); }
+.stats { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; text-align: left; font-size: 15px; }
+.stats b { text-align: right; font-variant-numeric: tabular-nums; }
+.stats .big { font-size: 18px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+#tapHint {
+  position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 28px); z-index: 4; pointer-events: none;
+  text-align: center; font: 700 16px var(--body); color: #fff; text-shadow: 0 2px 10px rgba(0,40,80,.5);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  transition: opacity .6s;
+}
+#tapHint small { display: block; font-weight: 500; font-size: 13px; opacity: .85; margin-top: 4px; }
+@media (prefers-reduced-motion: reduce) { #mult { transition: none; } }
+</style>
+
+<canvas id="cv" aria-label="Oyun alanı: ekranın herhangi bir yerine dokun"></canvas>
+
+<div id="hud" class="off">
+  <div class="hudL"><button id="menuBtn" aria-label="Duraklat">❚❚</button><div id="score">0</div></div>
+  <div id="prog"><i></i></div>
+  <div class="hudR"><div id="mult">x1</div><div id="combo">seri 0</div></div>
+</div>
+<div id="tapHint" hidden></div>
+
+<div class="ov" id="home">
+  <div class="card">
+    <h1>Dokun<span class="dot">·</span>Çal</h1>
+    <p class="lead">Şarkıyı sen çalarsın. Her dokunuş sıradaki sesi açar. Zamanında bas, şarkı hiç durmadan aksın.</p>
+    <button class="btn" id="pick">Şarkı seç</button>
+    <button class="btn ghost" id="demo">Örnek parçayla dene</button>
+    <div class="err" id="err"></div>
+    <div class="label">Zorluk</div>
+    <div class="seg" id="diff"><button data-v="0">Rahat</button><button data-v="1" class="on">Normal</button><button data-v="2">Usta</button></div>
+    <div class="label">Tema</div>
+    <div class="chips" id="chips1"></div>
+    <p class="hint">MP3, M4A, WAV, OGG, FLAC, hatta video dosyası olur. Şarkı telefonunda çözülür ve birkaç saniyede oyuna dönüşür; hiçbir yere yüklenmez.</p>
+    <input type="file" id="file" accept="audio/*,video/*,.mp3,.m4a,.aac,.wav,.ogg,.oga,.opus,.flac,.webm,.mp4" hidden>
+  </div>
+</div>
+
+<div class="ov" id="busy" hidden>
+  <div class="card">
+    <h2 id="busyT">Şarkı hazırlanıyor</h2>
+    <div class="bar"><i id="busyB"></i></div>
+    <p class="hint" id="busyS">Sesler ayrılıyor…</p>
+  </div>
+</div>
+
+<div class="ov" id="pause" hidden>
+  <div class="card">
+    <h2>Duraklatıldı</h2>
+    <button class="btn" id="resume">Devam et</button>
+    <div class="row"><button class="btn ghost" id="restart">Baştan</button><button class="btn ghost" id="newSong">Yeni şarkı</button></div>
+    <div class="label">Tema</div>
+    <div class="chips" id="chips2"></div>
+    <div class="label">Ses gecikmesi</div>
+    <div class="range"><input type="range" id="lat" min="-80" max="200" step="5" value="0" aria-label="Ses gecikmesi düzeltmesi"><output id="latO">0 ms</output></div>
+    <p class="hint">Hep "GEÇ" ya da hep "ERKEN" alıyorsan bunu kaydır. Bluetooth kulaklıkta genelde 120 ile 180 ms arası iyi gelir.</p>
+  </div>
+</div>
+
+<div class="ov" id="result" hidden>
+  <div class="card">
+    <div class="rank" id="rRank">S</div>
+    <div class="stats" id="rStats"></div>
+    <button class="btn green" id="again">Tekrar çal</button>
+    <button class="btn ghost" id="menu2">Yeni şarkı</button>
+  </div>
+</div>
