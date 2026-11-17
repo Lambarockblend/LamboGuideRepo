@@ -245,7 +245,7 @@
     }
     evs.sort((a, b) => a.t - b.t);
     if (onProgress) onProgress(0.9);
-    return { events: evs, env: sf, hopSec };
+    return { events: evs, env: sf, hopSec, off: (NX / 2) / sr2 };
   }
 
 
@@ -273,7 +273,7 @@
       let period = (60 / bpm) * 4; while (period < 1.6) period *= 2; while (period > 3.4) period /= 2;
       rankEvents(events);
       if (onProgress) onProgress(1);
-      return { events, period, bpm, duration: dur };
+      return { events, period, bpm, duration: dur, env: sfr.env, hopSec: sfr.hopSec, envOff: sfr.off };
     }
     const hopSec = HOP / sr2;
     const nF = Math.max(0, Math.floor((mono.length - N) / HOP) + 1);
