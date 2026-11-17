@@ -208,48 +208,17 @@
   }
   const voicePos = (now) => (voice ? Math.min(voice.end, voice.pos0 + (now - voice.ctx0)) : -1);
 
-  // ================= DOKUNUŞ NOKTALARI (vuruş ızgarası) =================
-  // Seviye: 0 = iki vuruşta bir, 1 = her vuruş, 2 = yarım vuruş (sekizlik), 3 = çeyrek vuruş (onaltılık)
-  // Şarkı ilerledikçe seviye yükselir: aralık önce uzun, sonra kısalır.
+  // ================= DOKUNUŞ NOKTALARI (ritim deseni) =================
+  // Seviye 0: ölçüde 2, 1: 4, 2: 6, 3: 10 dokunuş. Şarkı ilerledikçe seviye yükselir.
   const DIFF = [{ from: 0, to: 1 }, { from: 0, to: 2 }, { from: 1, to: 3 }];
   let diff = store.get('diff', 1);
-  function buildTaps(events, beats, dur) {
-    const cfg = DIFF[diff];
-    const first = beats.findIndex((b) => b >= (events.length ? events[0].t - 0.1 : 0));
-    const t0 = beats[Math.max(0, first)] || 0;
+  function buildTaps(sg) {
+    const cfg = DIFF[diff], beats = sg.beats, dur = sg.duration, events = sg.events;
+    const t0 = sg.slots.length ? (sg.slots.find((x) => x.acc > 0.3) || sg.slots[0]).t : 0;
     const steps = cfg.to - cfg.from + 1;
     const stepLen = clamp((dur - t0) * 0.5 / steps, 12, 40);    // her seviye en az 12 sn sürer
     const levelAt = (t) => Math.min(cfg.to, cfg.from + Math.floor(Math.max(0, t - t0) / stepLen));
-    // ızgara noktaları
-    const grid = [];
-    for (let i = 0; i < beats.length - 1; i++) {
-      const b = beats[i], p = beats[i + 1] - b;
-      grid.push({ t: b, lvl: i % 2 === 0 ? 0 : 1 });
-      grid.push({ t: b + p / 2, lvl: 2 });
-      grid.push({ t: b + p / 4, lvl: 3 }); grid.push({ t: b + (3 * p) / 4, lvl: 3 });
-    }
-    grid.sort((a, b) => a.t - b.t);
-    const per = beats.length > 1 ? beats[1] - beats[0] : 0.5;
-    const tol = [0.08, 0.08, per * 0.15, per * 0.09];
-    // her ızgara noktasına en yakın gerçek sesi bul
-    const ev = events;
-    let j = 0;
-    const taps = [];
-    const used = new Set();
-    for (const gp of grid) {
-      if (gp.lvl > levelAt(gp.t)) continue;
-      while (j < ev.length && ev[j].t < gp.t - tol[gp.lvl]) j++;
-      let best = -1, bd = Infinity;
-      for (let q = j; q < ev.length && ev[q].t <= gp.t + tol[gp.lvl]; q++) {
-        const d = Math.abs(ev[q].t - gp.t) - 0.02 * ev[q].strength;
-        if (d < bd && !used.has(q)) { bd = d; best = q; }
-      }
-      if (best < 0) continue;            // ızgara noktasında ses yoksa orası es
-      const e = ev[best];
-      if (taps.length && e.t - taps[taps.length - 1].t < 0.09) continue;
-      used.add(best);
-      taps.push({ t: e.t, s: clamp(e.strength / 1.4, 0.25, 1), kind: e.kind || 'note', sub: e.sub || 'snare', dur: 0, sus: e.sustain || 0, lvl: gp.lvl });
-    }
+    const taps = Groove.chart(sg.slots, events, levelAt).map((p) => ({ t: p.t, s: p.s, kind: p.kind, sub: p.sub, dur: 0, sus: p.sus, lvl: p.lvl }));
     for (let i = 0; i < taps.length; i++) {
       const tp = taps[i];
       if (tp.kind !== 'hold') continue;
@@ -943,8 +912,11 @@
     if (an.events.length < 4) throw new Error('Bu dosyada ayırt edilebilir ses bulunamadı.');
     await Classify.classify(chs, buffer.sampleRate, an.events, (p) => busy('Şarkı hazırlanıyor', 0.55 + 0.42 * p, 'Davullar ve uzun sesler bulunuyor…'));
     for (const e of an.events) { e.kind = Classify.kindOf(e); e.sub = Classify.drumSub(e); }
+    busy('Şarkı hazırlanıyor', 0.98, 'Ritim deseni çıkarılıyor…');
     const beats = Beats.track(an.env, an.hopSec, an.bpm, an.envOff, buffer.duration);
-    song = { buffer, name, events: an.events, beats, taps: buildTaps(an.events, beats, buffer.duration), duration: buffer.duration };
+    const slots = Groove.slots(Groove.fromFrames(an.events.frames), beats, buffer.duration).list;
+    song = { buffer, name, events: an.events, beats, slots, duration: buffer.duration };
+    song.taps = buildTaps(song);
     startPlay();
   }
   async function loadFile(file) {
@@ -995,7 +967,7 @@
   $('#resume').addEventListener('click', resume);
   $('#restart').addEventListener('click', () => { if (ctx) ctx.resume(); startPlay(); });
   $('#newSong').addEventListener('click', () => { if (ctx) ctx.resume(); stopVoice(0.02); paused = false; state = 'home'; show('home'); });
-  $('#again').addEventListener('click', () => { if (song) { song.taps = buildTaps(song.events, song.beats, song.duration); startPlay(); } });
+  $('#again').addEventListener('click', () => { if (song) { song.taps = buildTaps(song); startPlay(); } });
   $('#menu2').addEventListener('click', () => { stopVoice(0.02); state = 'home'; show('home'); });
   $('#diff').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;

@@ -6,6 +6,7 @@ cd "$(dirname "$0")"
   printf '<script>\n'; cat src/analysis.js; printf '</script>\n'
   printf "<script>\n"; cat src/classify.js; printf "</script>\n"
   printf "<script>\n"; cat src/beats.js; printf "</script>\n"
+  printf "<script>\n"; cat src/groove.js; printf "</script>\n"
   printf '<script>\n'; cat src/synth.js; printf '</script>\n'
   printf '<script>\n'; cat src/game.js; printf '</script>\n'
 } > dokun-cal.html

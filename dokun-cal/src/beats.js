@@ -4,6 +4,28 @@
  */
 (function (root) {
   'use strict';
+  // Tempo: başlangıç eğrisinin kendisiyle benzerliği (otokorelasyon). Gerçek tempo, vuruşun
+  // yarısında ve çeyreğinde (hi-hat), 2 ve 4 katında (ölçü) de destek bulur. Üçleme hatası
+  // (ör. 140 yerine 93) bu yüzden elenir: 93'ün yarısı ve çeyreği müzikte bir şeye denk gelmez.
+  function estimate(env, hopSec) {
+    const n = env.length;
+    let mean = 0; for (let i = 0; i < n; i++) mean += env[i]; mean /= n;
+    const e = new Float32Array(n); for (let i = 0; i < n; i++) e[i] = Math.max(0, env[i] - mean);
+    const maxLag = Math.min(n - 1, Math.round(4.2 / hopSec));
+    const ac = new Float32Array(maxLag + 2);
+    for (let L = 1; L <= maxLag + 1; L++) { let s = 0; for (let i = 0; i + L < n; i++) s += e[i] * e[i + L]; ac[L] = s / (n - L); }
+    const at = (lag) => { if (lag < 1 || lag > maxLag) return 0; const i = Math.floor(lag), f = lag - i; return Math.max(ac[i] * (1 - f) + ac[i + 1] * f, ac[Math.round(lag)]); };
+    const W = [[0.25, 0.35], [0.5, 0.7], [1, 1], [2, 0.8], [4, 0.9]];
+    let best = 120, bv = -1;
+    for (let bpm = 60; bpm <= 200; bpm += 0.25) {
+      const P = 60 / bpm / hopSec;
+      let sc = 0; for (const [m, w] of W) sc += w * at(m * P);
+      sc *= Math.exp(-0.5 * Math.pow(Math.log2(bpm / 115) / 1.0, 2));
+      if (sc > bv) { bv = sc; best = bpm; }
+    }
+    // çok yavaş seçildiyse ve iki katı neredeyse aynı güçteyse hızlı olanı al (16'lık ızgara daha ince olur)
+    return best;
+  }
   function track(env, hopSec, bpm, off, duration) {
     const n = env.length;
     if (n < 8) return [];
@@ -11,6 +33,7 @@
     let sd = 0; for (let i = 0; i < n; i++) sd += (env[i] - mean) * (env[i] - mean); sd = Math.sqrt(sd / n) || 1;
     const e = new Float32Array(n);
     for (let i = 0; i < n; i++) e[i] = Math.max(0, (env[i] - mean) / sd);
+    bpm = estimate(env, hopSec) || bpm;
     const P = 60 / bpm / hopSec;
     const score = new Float32Array(n), back = new Int32Array(n).fill(-1);
     const TIGHT = 100, lo = Math.round(P * 0.5), hi = Math.round(P * 2);
@@ -53,7 +76,7 @@
     while (beats.length && beats[beats.length - 1] + per < duration) beats.push(beats[beats.length - 1] + per);
     return beats;
   }
-  const api = { track };
+  const api = { track, estimate };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Beats = api;
 })(typeof window !== 'undefined' ? window : globalThis);

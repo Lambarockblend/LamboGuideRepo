@@ -55,10 +55,12 @@
     // HPSS: zaman yönünde medyan = harmonik, frekans yönünde medyan = vurmalı
     const LT = 17, LF = 17, ht = LT >> 1, hf = LF >> 1, buf = new Float32Array(32);
     const Hf = new Float32Array(nF), Pf = new Float32Array(nF), Lo = new Float32Array(nF), Hi = new Float32Array(nF);
+    const PMid = new Float32Array(nF), PHi = new Float32Array(nF), HMel = new Float32Array(nF);
+    const midK = Math.round(2000 / (sr2 / N));
     const loK = Math.round(150 / (sr2 / N));
     for (let fr = 0; fr < nF; fr++) {
       const row = fr * (K + 1);
-      let he = 0, pe = 0, lo = 0;
+      let he = 0, pe = 0, lo = 0, pm = 0, ph = 0, hm = 0;
       for (let k = 1; k < K; k++) {
         let n = 0;
         for (let d = -ht; d <= ht; d++) { const q = fr + d; if (q >= 0 && q < nF) buf[n++] = S[q * (K + 1) + k]; }
@@ -71,8 +73,11 @@
         const mh = h * h / (h * h + p * p + 1e-12);
         he += v2 * mh; pe += v2 * (1 - mh);
         if (k <= loK) lo += v2 * (1 - mh);
+        else if (k <= midK) { pm += v2 * (1 - mh); hm += v2 * mh; }
+        else ph += v2 * (1 - mh);
       }
       Hf[fr] = he; Pf[fr] = pe; Lo[fr] = lo; Hi[fr] = S[row + K] * S[row + K];
+      PMid[fr] = pm; PHi[fr] = ph; HMel[fr] = hm;
       if (onProgress && (fr & 511) === 511) { onProgress(0.4 + 0.55 * fr / nF); await tick(); }
     }
     const fps = sr2 / HOP, at = (t) => Math.max(0, Math.min(nF - 1, Math.round(t * fps - 0.5 * N / HOP)));
@@ -101,6 +106,8 @@
       e.gap = gap; e.sustain = sus;
     }
     if (onProgress) onProgress(1);
+    // ritim deseni için: vurmalı bantlar (bas davul, trampet gövdesi, trampet çıtırtısı, zil) + melodi
+    events.frames = { bands: [Lo, PMid, PHi, Hi, HMel], fps, off: (N / 2) / sr2, nF };
     return events;
   }
 
