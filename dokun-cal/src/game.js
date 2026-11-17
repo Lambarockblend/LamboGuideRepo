@@ -58,7 +58,7 @@
   const FS = [
     'precision highp float;',
     'uniform vec2 uRes, uCenter;',
-    'uniform float uTime, uSpin, uTravel, uBreath, uPulse, uEnergy, uWait, uLight, uHueT;',
+    'uniform float uTime, uSpin, uTravel, uBreath, uPulse, uEnergy, uWait, uLight, uHueT, uDrum, uHold, uPunch;',
     'uniform vec3 uC1, uC2, uC3, uBg1, uBg2;',
     'uniform vec4 uR0, uR1, uR2, uR3;',
     'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }',
@@ -74,21 +74,22 @@
     '  vec2 p = (gl_FragCoord.xy - uCenter) / m;',
     '  p += rip(p, uR0) + rip(p, uR1) + rip(p, uR2) + rip(p, uR3);',
     '  float r = length(p), a = atan(p.y, p.x);',
-    '  float lr = log(max(r, 1e-3)) - 0.06 * uBreath;',
+    '  float lr = log(max(r, 1e-3)) - 0.06 * uBreath - 0.16 * uPunch + 0.05 * uDrum;',
     '  float v1 = 3.0 * (a + uSpin) / 6.2831853 + 2.1 * lr + uTravel;',
-    '  float l1 = pow(0.5 + 0.5 * cos(6.2831853 * v1), mix(9.0, 4.5, uEnergy));',
+    '  float sharp = mix(9.0, 4.5, uEnergy) * (1.0 + 1.6 * uDrum) / (1.0 + 2.2 * uHold);',
+    '  float l1 = pow(0.5 + 0.5 * cos(6.2831853 * v1), sharp);',
     '  float v2 = 5.0 * (a - uSpin * 0.55) / 6.2831853 - 1.3 * lr + uTravel * 0.6;',
     '  float l2 = pow(0.5 + 0.5 * cos(6.2831853 * v2), 16.0);',
     '  float v3 = 1.5 * lr + uTravel * 1.25;',
     '  float l3 = pow(0.5 + 0.5 * cos(6.2831853 * v3), 22.0);',
     '  float nearF = smoothstep(0.012, 0.17, r);',
     '  float farF = 1.0 - 0.45 * smoothstep(0.7, 1.3, r);',
-    '  float br = 0.42 + 0.58 * uBreath + 0.55 * uPulse + 0.3 * uEnergy;',
+    '  float br = 0.42 + 0.58 * uBreath + 0.55 * uPulse + 0.3 * uEnergy + 0.9 * uPunch + 0.25 * uHold;',
     '  br *= mix(1.0, 0.8 + 0.2 * sin(uTime * 7.0), uWait);',
     '  float L = (l1 + l2 * 0.3 + l3 * (0.12 + 0.3 * uBreath)) * nearF * farF * br;',
     '  vec3 lc = pal(lr * 0.22 + uHueT);',
     '  vec3 bg = mix(uBg1, uBg2, smoothstep(0.0, 1.15, r));',
-    '  float core = exp(-r * r * 38.0) * (0.55 + 0.45 * uBreath + 0.7 * uPulse);',
+    '  float core = exp(-r * r * (38.0 - 22.0 * uPunch)) * (0.55 + 0.45 * uBreath + 0.7 * uPulse + 1.2 * uPunch);',
     '  vec3 col;',
     '  if (uLight > 0.5) {',
     '    col = mix(bg, mix(lc, vec3(1.0), 0.45), clamp(L, 0.0, 1.0) * 0.72);',
@@ -114,7 +115,7 @@
       const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
       const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-      ['uRes', 'uCenter', 'uTime', 'uSpin', 'uTravel', 'uBreath', 'uPulse', 'uEnergy', 'uWait', 'uLight', 'uHueT', 'uC1', 'uC2', 'uC3', 'uBg1', 'uBg2', 'uR0', 'uR1', 'uR2', 'uR3']
+      ['uRes', 'uCenter', 'uTime', 'uSpin', 'uTravel', 'uBreath', 'uPulse', 'uEnergy', 'uWait', 'uLight', 'uHueT', 'uDrum', 'uHold', 'uPunch', 'uC1', 'uC2', 'uC3', 'uBg1', 'uBg2', 'uR0', 'uR1', 'uR2', 'uR3']
         .forEach((n) => { U[n] = gl.getUniformLocation(prog, n); });
     } catch (e) { gl = null; }
   }
@@ -136,6 +137,7 @@
     gl.uniform1f(U.uBreath, vis.breath); gl.uniform1f(U.uPulse, vis.pulse);
     gl.uniform1f(U.uEnergy, vis.energy); gl.uniform1f(U.uWait, vis.wait);
     gl.uniform1f(U.uLight, th.light); gl.uniform1f(U.uHueT, vis.hueT);
+    gl.uniform1f(U.uDrum, vis.drum); gl.uniform1f(U.uHold, vis.hold); gl.uniform1f(U.uPunch, vis.punch);
     gl.uniform3fv(U.uC1, hex(th.c[0])); gl.uniform3fv(U.uC2, hex(th.c[1])); gl.uniform3fv(U.uC3, hex(th.c[2]));
     gl.uniform3fv(U.uBg1, hex(th.bg1)); gl.uniform3fv(U.uBg2, hex(th.bg2));
     for (let i = 0; i < 4; i++) {
@@ -213,7 +215,7 @@
     const t0 = events.length ? events[0].t : 0;
     const rampT = clamp(dur * 0.35, 14, 60);
     const gapAt = (t) => minG + (startG - minG) * Math.max(0, 1 - (t - t0) / rampT);
-    const score = (e) => e.strength * (1 + 0.45 * (e.bands.indexOf(0) >= 0 || e.bands.indexOf(1) >= 0 ? 1 : 0));
+    const score = (e) => e.strength * (1 + 0.45 * (e.bands.indexOf(0) >= 0 || e.bands.indexOf(1) >= 0 ? 1 : 0)) * (e.kind === 'hold' ? 3 : 1);
     const order = events.slice().sort((a, b) => score(b) - score(a));
     const acc = [];
     const find = (t) => { let lo = 0, hi = acc.length; while (lo < hi) { const m = (lo + hi) >> 1; if (acc[m].t < t) lo = m + 1; else hi = m; } return lo; };
@@ -223,7 +225,16 @@
       if (i < acc.length && acc[i].t - e.t < G) continue;
       acc.splice(i, 0, e);
     }
-    return acc.map((e) => ({ t: e.t, s: clamp(e.strength / 1.4, 0.25, 1), band: e.main }));
+    const taps = acc.map((e) => ({ t: e.t, s: clamp(e.strength / 1.4, 0.25, 1), kind: e.kind || 'note', sub: e.sub || 'snare', dur: 0 }));
+    // uzayan ses: sonraki dokunuşa kadar ne kadar basılı tutulacağı
+    for (let i = 0; i < taps.length; i++) {
+      const tp = taps[i];
+      if (tp.kind !== 'hold') continue;
+      const src = acc[i], nx = i + 1 < taps.length ? taps[i + 1].t : tp.t + 4;
+      tp.dur = Math.min(src.sustain || 0, nx - tp.t - 0.08);
+      if (tp.dur < 0.4) tp.kind = 'note';
+    }
+    return taps;
   }
 
   // ================= OYUN DURUMU =================
@@ -232,7 +243,7 @@
   let cnt = { p: 0, gr: 0, go: 0, late: 0, miss: 0, stray: 0 };
   let missFlag = -1, lastAccept = -9, evCursor = 0, finishAt = 0;
   let bubbles = [], drops = [], floaters = [], callout = null, flash = 0, redA = 0;
-  const vis = { spin: 0, travel: 0, breath: 0, pulse: 0, energy: 0, wait: 0, hueT: 0, speed: 0 };
+  const vis = { spin: 0, travel: 0, breath: 0, pulse: 0, energy: 0, wait: 0, hueT: 0, speed: 0, drum: 0, hold: 0, punch: 0 };
   const mult = () => Math.min(8, 1 + Math.floor(combo / 5));
   const tier = () => { const m = mult(); return m < 3 ? 0 : m < 5 ? 1 : m < 7 ? 2 : 3; };
 
@@ -241,6 +252,7 @@
     score = 0; combo = 0; maxCombo = 0; lastMult = 1; missFlag = -1; lastAccept = -9; evCursor = 0; finishAt = 0;
     cnt = { p: 0, gr: 0, go: 0, late: 0, miss: 0, stray: 0 };
     bubbles = []; drops = []; floaters = []; callout = null; flash = 0; redA = 0;
+    hold = null; rings.length = 0;
     k = 0;
     ensureCtx();
     const first = song.taps.length ? song.taps[0].t : 0;
@@ -253,7 +265,9 @@
 
   // ================= DOKUNUŞ =================
   const GLYPHS = ['♪', '♫', '♬', '♩'];
-  function onTap(x, y) {
+  let hold = null;     // basılı tutulan uzun ses {pid, idx, tStart, dur, x, y, path, held, done}
+  let holdHinted = false;
+  function onTap(x, y, pid) {
     if (state !== 'play' || paused || !song) return;
     ensureCtx();
     const now = ctx.currentTime;
@@ -270,6 +284,7 @@
     const tp = song.taps[k];
     // saat: geç kaldıysa beklediği yerden şimdi yeniden akar; erken basışta saate dokunulmaz
     if (waiting(now)) { clock.ctx0 = now; clock.pos0 = tp.t; }
+    endHold(now, true);
     k++; lastAccept = now;
     // ses: hemen
     stopVoice(0.008);
@@ -283,15 +298,161 @@
     else {
       cnt[grade]++; combo++; maxCombo = Math.max(maxCombo, combo);
       score += (grade === 'p' ? 300 : grade === 'gr' ? 200 : 100) * m;
-      if (grade === 'p') floaters.push({ text: 'MÜKEMMEL', x, y: y - 70 * SC, t0: nowS(), col: '#fffbe0', size: 14 });
+      if (grade === 'p' && tp.kind !== 'drum') floaters.push({ text: 'MÜKEMMEL', x, y: y - 70 * SC, t0: nowS(), col: '#fffbe0', size: 14 });
       milestone();
     }
     if (missFlag === k - 1) missFlag = -1;
-    spawnBubble(x, y, grade, tp);
-    addRipple(x, y, grade === 'p' ? 1 : grade === 'late' ? 0.5 : 0.8);
-    vis.pulse = Math.min(1, vis.pulse + 0.5 + 0.4 * tp.s);
-    hideTapHint();
+    // sesin türüne göre his
+    if (tp.kind === 'drum') {
+      drumHit(x, y, tp.sub, grade);
+    } else if (tp.kind === 'hold') {
+      hold = { pid, idx: k - 1, tStart: now, dur: tp.dur, x, y, path: [{ x, y, t: nowS() }], held: 0, slide: 0, done: false, h: TH().hue[(rnd() * 3) | 0], glyph: GLYPHS[(rnd() * 4) | 0], t0: nowS() };
+      addRipple(x, y, 0.7);
+      vis.pulse = Math.min(1, vis.pulse + 0.4);
+      if (!holdHinted) { holdHinted = true; showTapHint('hold'); }
+    } else {
+      spawnBubble(x, y, grade, tp);
+      addRipple(x, y, grade === 'p' ? 1 : grade === 'late' ? 0.5 : 0.8);
+      vis.pulse = Math.min(1, vis.pulse + 0.5 + 0.4 * tp.s);
+    }
+    if (tp.kind !== 'hold') hideTapHint();
     updateHud();
+  }
+  // ---- basılı tutma ----
+  function moveHold(x, y, pid) {
+    if (!hold || hold.done || hold.pid !== pid) return;
+    const last = hold.path[hold.path.length - 1], dist = Math.hypot(x - last.x, y - last.y);
+    if (dist < 2) return;
+    hold.slide += dist; hold.x = x; hold.y = y;
+    hold.path.push({ x, y, t: nowS() });
+    if (hold.path.length > 90) hold.path.shift();
+    if (rnd() < Math.min(0.6, dist / 30)) drops.push({ x, y, vx: (rnd() - 0.5) * 40, vy: -20 - rnd() * 40, t0: nowS(), life: 0.6 + rnd() * 0.4, s: (2 + rnd() * 3) * SC, h: hold.h + (rnd() - 0.5) * 40, al: 0.9 });
+  }
+  function releaseHold(pid) {
+    if (!hold || hold.done || hold.pid !== pid) return;
+    endHold(ctx.currentTime, false);
+  }
+  // uzun sesi bitir: parmak kalktı, başka dokunuş geldi ya da ses doğal sonuna vardı
+  function endHold(now, interrupted) {
+    if (!hold || hold.done) return;
+    const h = hold; h.done = true; h.tEnd = nowS();
+    const ratio = clamp((now - h.tStart) / h.dur, 0, 1);
+    const m = mult();
+    if (ratio >= 0.85 || interrupted) {
+      const bonus = Math.round((150 + Math.min(150, h.slide / 4)) * m);
+      score += bonus;
+      floaters.push({ text: h.slide > 60 ? 'AKIŞ +' + bonus : 'UZUN +' + bonus, x: h.x, y: h.y - 70 * SC, t0: nowS(), col: '#fffbe0', size: 14 });
+      spawnBubble(h.x, h.y, 'p');
+      addRipple(h.x, h.y, 1);
+    } else {
+      // erken bırakıldı: ses o an yumuşakça kesilir
+      if (voice) stopVoice(0.12);
+      score += Math.round(ratio * 120 * m);
+      if (ratio < 0.4) breakCombo('ERKEN BIRAKTIN', h.x, h.y);
+      else floaters.push({ text: 'KISA', x: h.x, y: h.y - 70 * SC, t0: nowS(), col: '#d8f6ff', size: 13 });
+      spawnBubble(h.x, h.y, 'soft');
+    }
+    updateHud();
+  }
+  // ---- davul vuruşu ----
+  const rings = [];
+  let shake = 0;
+  function drumHit(x, y, sub, grade) {
+    const kick = sub === 'kick', tn = nowS(), th = TH();
+    const h = th.hue[kick ? 0 : 1] + (rnd() - 0.5) * 20;
+    rings.push({ x, y, t0: tn, kick, h, s: grade === 'p' ? 1.15 : 1, seed: rnd() * TAU });
+    if (rings.length > 24) rings.shift();
+    addRipple(x, y, kick ? 1.7 : 1.0);
+    if (kick) { vis.punch = 1; shake = Math.max(shake, 7); vib(18); }
+    else { vis.punch = Math.max(vis.punch, 0.35); shake = Math.max(shake, 2.5); vib(8); }
+    vis.pulse = Math.min(1, vis.pulse + 0.6);
+  }
+  function vib(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+  function drawRings(tn) {
+    const light = TH().light, neon = TH().id === 'neon';
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const r = rings[i], a = tn - r.t0, life = r.kick ? 0.55 : 0.38;
+      if (a > life) { rings.splice(i, 1); continue; }
+      const p = a / life, e = easeOutCubic(p);
+      g.save();
+      g.globalCompositeOperation = light ? 'source-over' : 'lighter';
+      if (r.kick) {
+        // bas davul: derinden gelen kalın şok dalgası + içte sönen parlama (deri titreşimi)
+        const R0 = 150 * SC * r.s;
+        const fl = Math.max(0, 1 - a / 0.12);
+        if (fl > 0) {
+          const fg = g.createRadialGradient(r.x, r.y, 0, r.x, r.y, 70 * SC);
+          fg.addColorStop(0, 'hsla(' + r.h + ',100%,' + (light ? 98 : 75) + '%,' + 0.8 * fl + ')'); fg.addColorStop(1, 'hsla(' + r.h + ',100%,70%,0)');
+          g.fillStyle = fg; g.beginPath(); g.arc(r.x, r.y, 70 * SC, 0, TAU); g.fill();
+        }
+        for (let j = 0; j < 2; j++) {
+          const pe = easeOutCubic(clamp((a - j * 0.07) / (life - j * 0.07), 0, 1));
+          if (pe <= 0) continue;
+          g.globalAlpha = Math.min(1, (1 - pe) * 1.4) * (j ? 0.6 : 1);
+          g.lineWidth = (j ? 4 : 18) * SC * (1 - pe * 0.8) + 1.5;
+          g.strokeStyle = neon ? 'hsl(' + r.h + ',100%,65%)' : 'hsla(' + r.h + ',100%,' + (light ? 97 : 78) + '%,1)';
+          if (neon) { g.shadowColor = 'hsl(' + r.h + ',100%,60%)'; g.shadowBlur = 18; }
+          // deri: hafif dalgalı çember
+          g.beginPath();
+          for (let q = 0; q <= 48; q++) {
+            const an = (q / 48) * TAU, wob = 1 + 0.035 * Math.sin(an * 6 + r.seed + a * 30) * (1 - pe);
+            const rr = R0 * pe * wob, px = r.x + Math.cos(an) * rr, py = r.y + Math.sin(an) * rr;
+            if (q === 0) g.moveTo(px, py); else g.lineTo(px, py);
+          }
+          g.stroke();
+        }
+      } else {
+        // trampet / zil: keskin kıvılcım çizgileri + ince halka
+        const n = 12;
+        g.strokeStyle = neon ? 'hsl(' + r.h + ',100%,72%)' : 'hsla(' + r.h + ',100%,' + (light ? 98 : 82) + '%,1)';
+        g.lineCap = 'round';
+        g.globalAlpha = 1 - p;
+        g.lineWidth = 2.6 * SC * (1 - p) + 0.5;
+        for (let q = 0; q < n; q++) {
+          const an = (q / n) * TAU + r.seed, r1 = (14 + 70 * e) * SC * r.s, r2 = r1 - (26 * (1 - p) + 4) * SC;
+          g.beginPath(); g.moveTo(r.x + Math.cos(an) * Math.max(6 * SC, r2), r.y + Math.sin(an) * Math.max(6 * SC, r2)); g.lineTo(r.x + Math.cos(an) * r1, r.y + Math.sin(an) * r1); g.stroke();
+        }
+        g.lineWidth = 1.5 * SC; g.globalAlpha = (1 - p) * 0.8;
+        g.beginPath(); g.arc(r.x, r.y, (10 + 46 * e) * SC, 0, TAU); g.stroke();
+        const fl = Math.max(0, 1 - a / 0.08);
+        if (fl > 0) { g.globalAlpha = fl; g.fillStyle = '#fff'; g.beginPath(); g.arc(r.x, r.y, 9 * SC, 0, TAU); g.fill(); }
+      }
+      g.restore();
+    }
+  }
+  // ---- basılı tutulan baloncuk + kaydırma izi ----
+  function drawHold(tn) {
+    if (!hold) return;
+    const h = hold, neon = TH().id === 'neon', light = TH().light;
+    const fadeOut = h.done ? clamp((tn - h.tEnd) / 0.5, 0, 1) : 0;
+    if (h.done && fadeOut >= 1) { hold = null; return; }
+    // iz: kuyruğu incelen, zamanla solan şerit
+    const pts = h.path.filter((q) => tn - q.t < 0.7);
+    if (pts.length > 1) {
+      g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
+      g.globalCompositeOperation = light ? 'source-over' : 'lighter';
+      for (let i = 1; i < pts.length; i++) {
+        const age = (tn - pts[i].t) / 0.7, w = (1 - age) * 16 * SC * (1 - fadeOut);
+        if (w <= 0.3) continue;
+        g.strokeStyle = 'hsla(' + (h.h + i * 2) + ',100%,' + (light ? 94 : 70) + '%,' + (0.65 * (1 - age)) + ')';
+        if (neon) { g.shadowColor = 'hsl(' + h.h + ',100%,60%)'; g.shadowBlur = 14; }
+        g.lineWidth = w; g.beginPath(); g.moveTo(pts[i - 1].x, pts[i - 1].y); g.lineTo(pts[i].x, pts[i].y); g.stroke();
+      }
+      g.restore();
+    }
+    if (h.done) return;
+    // parmağın altında büyüyen baloncuk; dolum halkası ne kadar tutulacağını gösterir
+    const a = tn - h.t0, prog = clamp((ctx.currentTime - h.tStart) / h.dur, 0, 1);
+    const r = (30 + 22 * prog) * SC * (0.4 + 0.6 * easeOutBack(Math.min(1, a / 0.25)));
+    const w = Math.sin(a * 9) * 0.05;
+    bubbleBody(h.x, h.y, r * (1 + w), r * (1 - w), h.h, 1, a * 1.5);
+    glyph(h.glyph, h.x, h.y, r * 0.9, 1, h.h, Math.sin(a * 3) * 0.15);
+    g.save();
+    g.lineCap = 'round'; g.lineWidth = 4 * SC;
+    g.strokeStyle = light ? 'rgba(255,255,255,.95)' : 'hsl(' + h.h + ',100%,75%)';
+    if (!light) { g.shadowColor = 'hsl(' + h.h + ',100%,60%)'; g.shadowBlur = 12; }
+    g.beginPath(); g.arc(h.x, h.y, r + 9 * SC, -Math.PI / 2, -Math.PI / 2 + prog * TAU); g.stroke();
+    g.restore();
   }
   function breakCombo(text, x, y) {
     const had = combo;
@@ -487,7 +648,7 @@
   function frame() {
     requestAnimationFrame(frame);
     const tn = nowS(), dt = Math.min(0.05, tn - lastT); lastT = tn;
-    let breathT = 0, waitT = 0, flowing = false;
+    let breathT = 0, waitT = 0, flowing = false, drumT = 0, holdT = 0;
     if (song && state === 'play' && ctx) {
       const now = ctx.currentTime;
       if (!paused) tick(now);
@@ -504,7 +665,10 @@
         const c = clockPos(now), t = tK(), prev = k > 0 ? song.taps[k - 1].t : t - 1;
         const span = clamp(t - prev, 0.3, 1.1);
         const amp = clamp((t - prev - 0.12) / 0.5, 0.35, 1);
-        breathT = smooth(clamp(1 - (t - c) / span, 0, 1)) * amp;
+        const x = clamp(1 - (t - c) / span, 0, 1), kind = song.taps[k].kind;
+        breathT = (kind === 'drum' ? x * x * x : smooth(x)) * amp;   // davulda gerilim sona doğru birden artar
+        drumT = kind === 'drum' ? x * x : 0;
+        holdT = kind === 'hold' ? smooth(x) * 0.6 : 0;
         if (waiting(now)) { breathT = 1; waitT = clamp((now - hitCtx()) / 0.3, 0, 1); }
       }
       $('#prog i').style.width = (clamp(clockPos(now) / song.duration, 0, 1) * 100).toFixed(2) + '%';
@@ -512,6 +676,11 @@
     // görsel durum yumuşak geçişlerle
     vis.breath += (breathT - vis.breath) * Math.min(1, dt * (breathT < vis.breath ? 9 : 22));
     vis.wait += (waitT - vis.wait) * Math.min(1, dt * 6);
+    if (hold && !hold.done) holdT = 1;
+    vis.drum += (drumT - vis.drum) * Math.min(1, dt * (drumT < vis.drum ? 14 : 20));
+    vis.hold += (holdT - vis.hold) * Math.min(1, dt * 5);
+    vis.punch = Math.max(0, vis.punch - dt * 4.5);
+    shake = Math.max(0, shake - dt * 30);
     vis.pulse = Math.max(0, vis.pulse - dt * 2.6);
     const targetSpeed = state === 'play' ? (flowing ? 1 : 0.08) : 0.35;
     vis.speed += (targetSpeed - vis.speed) * Math.min(1, dt * (targetSpeed > vis.speed ? 6 : 2.5));
@@ -528,9 +697,14 @@
       const th = TH(), bgr = g.createRadialGradient(CX, CY, 0, CX, CY, Math.max(W, H) * 0.7);
       bgr.addColorStop(0, th.bg1); bgr.addColorStop(1, th.bg2); g.fillStyle = bgr; g.fillRect(0, 0, W, H);
     }
+    g.save();
+    if (shake > 0.2 && !reduced) g.translate((rnd() - 0.5) * shake, (rnd() - 0.5) * shake);
     drawAmbient(tn, dt);
+    drawRings(tn);
+    drawHold(tn);
     drawBubbles(tn, dt);
     drawText(tn);
+    g.restore();
     if (redA > 0) {
       const rg = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
       rg.addColorStop(0, 'rgba(255,70,100,0)'); rg.addColorStop(1, 'rgba(255,70,100,' + redA + ')');
@@ -539,6 +713,7 @@
     if (flash > 0 && !reduced) { g.fillStyle = 'rgba(255,255,255,' + flash + ')'; g.fillRect(0, 0, W, H); }
   }
   function tick(now) {
+    if (hold && !hold.done && now >= hold.tStart + hold.dur) endHold(now, false);
     if (k < song.taps.length) {
       if (waiting(now) && now - hitCtx() > 0.6 && missFlag !== k) {
         missFlag = k; cnt.miss++; score = Math.max(0, score - 100);
@@ -567,11 +742,13 @@
   let hintT = 0;
   function showTapHint(first) {
     const el = $('#tapHint');
-    el.innerHTML = first
-      ? 'Ekranın her yeri çalgı<small>Spiral nefes alıp en parlak olduğunda dokun. Ses parmağının değdiği an çıkar.</small>'
-      : 'Şarkı seni bekliyor';
+    el.innerHTML = first === 'hold'
+      ? 'Uzun ses: parmağını kaldırma<small>Halka dolana kadar basılı tut, istersen gezdir.</small>'
+      : first
+        ? 'Ekranın her yeri çalgı<small>Spiral nefes alıp en parlak olduğunda dokun. Ses parmağının değdiği an çıkar.</small>'
+        : 'Şarkı seni bekliyor';
     el.hidden = false; el.style.opacity = 1;
-    clearTimeout(hintT); hintT = setTimeout(hideTapHint, first ? 5000 : 2200);
+    clearTimeout(hintT); hintT = setTimeout(hideTapHint, first ? 4500 : 2200);
   }
   function hideTapHint() { const el = $('#tapHint'); el.style.opacity = 0; clearTimeout(hintT); hintT = setTimeout(() => { el.hidden = true; }, 600); }
 
@@ -622,8 +799,10 @@
     busy('Şarkı hazırlanıyor', 0.25, 'Sesler ayrılıyor…');
     const chs = [];
     for (let c = 0; c < Math.min(2, buffer.numberOfChannels); c++) chs.push(buffer.getChannelData(c));
-    const an = await Analysis.analyze(chs, buffer.sampleRate, (p) => busy('Şarkı hazırlanıyor', 0.25 + 0.7 * p, 'Sesler ayrılıyor…'), { play: true, floorK: 0.2, kLm: 1.25, kP: 0.1 });
+    const an = await Analysis.analyze(chs, buffer.sampleRate, (p) => busy('Şarkı hazırlanıyor', 0.2 + 0.35 * p, 'Sesler ayrılıyor…'), { play: true, floorK: 0.2, kLm: 1.25, kP: 0.1 });
     if (an.events.length < 4) throw new Error('Bu dosyada ayırt edilebilir ses bulunamadı.');
+    await Classify.classify(chs, buffer.sampleRate, an.events, (p) => busy('Şarkı hazırlanıyor', 0.55 + 0.42 * p, 'Davullar ve uzun sesler bulunuyor…'));
+    for (const e of an.events) { e.kind = Classify.kindOf(e); e.sub = Classify.drumSub(e); }
     song = { buffer, name, events: an.events, taps: buildTaps(an.events, buffer.duration), duration: buffer.duration };
     startPlay();
   }
@@ -653,13 +832,21 @@
   }
 
   // ---- olaylar ----
-  cv.addEventListener('pointerdown', (e) => { e.preventDefault(); onTap(e.clientX, e.clientY); }, { passive: false });
+  cv.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    try { cv.setPointerCapture(e.pointerId); } catch (er) {}
+    onTap(e.clientX, e.clientY, e.pointerId);
+  }, { passive: false });
+  cv.addEventListener('pointermove', (e) => { if (hold) moveHold(e.clientX, e.clientY, e.pointerId); });
+  const up = (e) => { if (hold && ctx) releaseHold(e.pointerId); };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('contextmenu', (e) => e.preventDefault());
   window.addEventListener('keydown', (e) => {
     if (e.repeat) return;
     if (e.key === 'Escape') { if (paused) resume(); else pause(); return; }
-    if (state === 'play' && !paused && e.key.length === 1) { e.preventDefault(); onTap(CX + (rnd() - 0.5) * W * 0.6, CY + (rnd() - 0.5) * H * 0.5); }
+    if (state === 'play' && !paused && e.key.length === 1) { e.preventDefault(); onTap(CX + (rnd() - 0.5) * W * 0.6, CY + (rnd() - 0.5) * H * 0.5, 'key:' + e.key); }
   });
+  window.addEventListener('keyup', (e) => { if (hold && ctx) releaseHold('key:' + e.key); });
   $('#pick').addEventListener('click', () => { ensureCtx(); $('#file').click(); });
   $('#file').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) loadFile(f); });
   $('#demo').addEventListener('click', loadDemo);
@@ -690,7 +877,7 @@
   window.__dc = {
     get state() { return state; }, get k() { return k; }, get song() { return song; }, get ctx() { return ctx; },
     get cnt() { return cnt; }, get score() { return score; }, get gl() { return !!gl; }, get vis() { return vis; },
-    tap: onTap, demo: loadDemo, clockPos: () => clockPos(ctx.currentTime), hitCtx: () => hitCtx(),
+    tap: onTap, release: (pid) => releaseHold(pid), move: (x, y, pid) => moveHold(x, y, pid), get hold() { return hold; }, demo: loadDemo, clockPos: () => clockPos(ctx.currentTime), hitCtx: () => hitCtx(),
     voicePos: () => voicePos(ctx.currentTime)
   };
 })();
