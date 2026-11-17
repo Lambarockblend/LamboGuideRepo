@@ -1,12 +1,11 @@
 /* Dokun Çal — oyun
  *
- * Kural: şarkıyı oyuncu çalar, ekranın her yeri çalgıdır.
- *  - Dokununca ses ANINDA çıkar: şarkının sıradaki sesi, parmağın değdiği an.
- *  - Şarkının kendi saati vardır ve gerçek zamandan hızlı akmaz. Sıradaki sese ancak
- *    zamanına EW saniye kalmışken basılabilir; daha erken dokunuş ses açmaz.
- *    Saat dokunuşla ileri itilemez, bu yüzden deli gibi basmak şarkıyı hızlandırmaz.
- *  - Geç kalınırsa ses o sesin başında susar, saat de bekler; dokununca kaldığı yerden akar.
- *  - Zamanlama ipucu: spiral sıradaki sesin anı yaklaştıkça nefes alır, an geldiğinde en parlaktır.
+ * Kural: şarkı kesintisiz akar ve oyuncu onu dokunuşlarıyla ayakta tutar.
+ *  - Alttaki şeritte her dokunuşun bir çerçevesi var. Çerçeve içinde bastığın sürece şarkı hiç
+ *    kesilmez; merkeze ne kadar yakınsa puan ve efekt o kadar büyük, tam merkez ekstra puan.
+ *  - Bir notayı tamamen kaçırırsan şarkı durmaz, kısılır; sonraki isabette yeniden açılır.
+ *  - Üst üste iki nota kaçarsa şarkı iki vuruş geri sarılıp dokunuşunu bekler.
+ *  - Çerçeveden önce basmak boş dokunuştur: şarkıyı etkilemez, seriyi bozar.
  */
 (function () {
   'use strict';
@@ -164,22 +163,25 @@
     if (ctx.state === 'suspended' && !paused) ctx.resume();
     return ctx;
   }
-  const PRE = 0.008;   // sesin atağını kaçırmamak için çok az önceden başla
-  const EW = 0.16;     // sıradaki sese en fazla bu kadar erken basılabilir
+  const DUCK = 0.07;   // kaçırınca şarkının kısıldığı seviye
   let latMs = store.get('lat2', 0);
 
-  let song = null;     // {buffer, name, events, taps, duration}
+  let song = null;     // {buffer, name, events, beats, slots, taps, duration}
   let k = 0;           // sıradaki dokunuş noktası
-  const clock = { ctx0: 0, pos0: 0 };    // şarkı saati
-  let voice = null;    // çalan ses {src, gn, ctx0, pos0, end, endCtx}
+  const clock = { ctx0: 0, pos0: 0 };    // şarkı saati (çalarken)
+  let running = false, holdPos = 0;      // durduysa saat holdPos'ta bekler
+  let voice = null;    // çalan ses {src, gn}
+  let ducked = false, missStreak = 0, resumeIdx = -1;
   const tK = () => song.taps[k].t;
-  // saat sıradaki noktaya vardığı an (ctx zamanı)
-  const hitCtx = () => clock.ctx0 + (tK() - clock.pos0);
-  function clockPos(now) {
-    const p = clock.pos0 + (now - clock.ctx0);
-    return k < song.taps.length ? Math.min(tK(), p) : p;
-  }
-  const waiting = (now) => k < song.taps.length && now >= hitCtx();
+  const ctxOf = (t) => clock.ctx0 + (t - clock.pos0);
+  const hitCtx = () => ctxOf(tK());
+  function clockPos(now) { return running ? clock.pos0 + (now - clock.ctx0) : holdPos; }
+  const waiting = () => state === 'play' && !running;
+  const beatLen = () => (song && song.beats.length > 1 ? song.beats[1] - song.beats[0] : 0.5);
+  // isabet çerçevesi: şeritteki çerçevenin yarıçapı kadar zaman (ekranda görünenle birebir)
+  const winPx = () => 18 * SC;
+  const stripBw = () => (W - 2 * 16 - 28) / 8;
+  const winSec = () => clamp(winPx() / stripBw() * beatLen(), 0.08, 0.22);
 
   function stopVoice(fade) {
     if (!voice) return;
@@ -192,21 +194,25 @@
     } catch (e) {}
     voice = null;
   }
-  // from..to aralığını "when" anında çal; sonda yumuşakça kıs
-  function playRange(from, to, when) {
+  // şarkıyı "pos" konumundan "when" anında kesintisiz başlat
+  function startSong(pos, when) {
+    stopVoice(0.02);
     const src = ctx.createBufferSource(); src.buffer = song.buffer;
     const gn = ctx.createGain(); src.connect(gn); gn.connect(master);
-    const realWhen = when + Math.max(0, -from), off = Math.max(0, from);
-    const dur = Math.max(0.03, to - off);
-    gn.gain.setValueAtTime(0, realWhen);
-    gn.gain.linearRampToValueAtTime(1, realWhen + 0.003);
-    const fade = Math.min(0.02, dur * 0.3);
-    gn.gain.setValueAtTime(1, realWhen + dur - fade);
-    gn.gain.linearRampToValueAtTime(0, realWhen + dur);
-    src.start(realWhen, off, dur + 0.01);
-    voice = { src, gn, ctx0: when, pos0: from, end: to, endCtx: realWhen + dur };
+    const realWhen = when + Math.max(0, -pos);
+    gn.gain.setValueAtTime(0, realWhen); gn.gain.linearRampToValueAtTime(1, realWhen + 0.01);
+    src.start(realWhen, Math.max(0, pos));
+    voice = { src, gn };
+    clock.ctx0 = when; clock.pos0 = pos; running = true; ducked = false;
   }
-  const voicePos = (now) => (voice ? Math.min(voice.end, voice.pos0 + (now - voice.ctx0)) : -1);
+  function setGain(v, time) {
+    if (!voice) return;
+    const now = ctx.currentTime, gp = voice.gn.gain;
+    if (gp.cancelAndHoldAtTime) gp.cancelAndHoldAtTime(now); else { gp.cancelScheduledValues(now); gp.setValueAtTime(gp.value, now); }
+    gp.linearRampToValueAtTime(v, now + time);
+  }
+  function duck() { if (!ducked) { ducked = true; setGain(DUCK, 0.09); } }
+  function unduck() { if (ducked) { ducked = false; setGain(1, 0.04); } }
 
   // ================= DOKUNUŞ NOKTALARI (ritim deseni) =================
   // Seviye 0: ölçüde 2, 1: 4, 2: 6, 3: 10 dokunuş. Şarkı ilerledikçe seviye yükselir.
@@ -235,8 +241,8 @@
   // ================= OYUN DURUMU =================
   let state = 'home';
   let score = 0, combo = 0, maxCombo = 0, lastMult = 1;
-  let cnt = { p: 0, gr: 0, go: 0, late: 0, miss: 0, stray: 0 };
-  let missFlag = -1, lastAccept = -9, evCursor = 0, finishAt = 0, beatCur = 0;
+  let cnt = { p: 0, gr: 0, go: 0, ok: 0, miss: 0, stray: 0 };
+  let lastAccept = -9, evCursor = 0, finishAt = 0, beatCur = 0;
   let bubbles = [], drops = [], floaters = [], callout = null, flash = 0, redA = 0;
   const vis = { spin: 0, travel: 0, breath: 0, pulse: 0, energy: 0, wait: 0, hueT: 0, speed: 0, drum: 0, hold: 0, punch: 0 };
   const mult = () => Math.min(8, 1 + Math.floor(combo / 5));
@@ -244,8 +250,9 @@
 
   function resetRun() {
     if (voice) stopVoice(0.01);
-    score = 0; combo = 0; maxCombo = 0; lastMult = 1; missFlag = -1; lastAccept = -9; evCursor = 0; finishAt = 0;
-    cnt = { p: 0, gr: 0, go: 0, late: 0, miss: 0, stray: 0 };
+    score = 0; combo = 0; maxCombo = 0; lastMult = 1; lastAccept = -9; evCursor = 0; finishAt = 0;
+    missStreak = 0; resumeIdx = -1;
+    cnt = { p: 0, gr: 0, go: 0, ok: 0, miss: 0, stray: 0 };
     bubbles = []; drops = []; floaters = []; callout = null; flash = 0; redA = 0;
     hold = null; rings.length = 0;
     k = 0;
@@ -254,9 +261,7 @@
     const per = song.beats.length > 1 ? song.beats[1] - song.beats[0] : 0.5;
     const start = Math.min(0, first - 4 * per);   // ilk dokunuştan önce en az 4 vuruşluk sayım
     beatCur = 0; while (beatCur < song.beats.length && song.beats[beatCur] < start + 0.01) beatCur++;
-    const when = ctx.currentTime + 0.06;
-    clock.ctx0 = when; clock.pos0 = start;
-    if (first - PRE > Math.max(0, start) + 0.05) playRange(start, first - PRE, when);   // giriş kendiliğinden çalar
+    startSong(start, ctx.currentTime + 0.06);   // giriş kendiliğinden çalar
     updateHud(true);
   }
 
@@ -268,10 +273,20 @@
     if (state !== 'play' || paused || !song) return;
     ensureCtx();
     const now = ctx.currentTime;
-    if (k >= song.taps.length) { spawnBubble(x, y, 'soft'); return; }
+    if (k >= song.taps.length) { spawnBubble(x, y, 'soft', null, 0.5); return; }
+    // durmuştu: dokunuş şarkıyı iki vuruş geriden yeniden başlatır
+    if (!running) {
+      startSong(holdPos, now + 0.01);
+      hideTapHint();
+      spawnBubble(x, y, 'soft', null, 0.6);
+      return;
+    }
+    const W0 = winSec();
+    settleMisses(now, W0);
+    if (k >= song.taps.length || !running) return;
     const d = now - latMs / 1000 - hitCtx();   // <0 erken, >0 geç
-    if (d < -EW) {
-      if (now - lastAccept < 0.075) { spawnBubble(x, y, 'soft'); return; }  // birden çok parmak aynı anda
+    if (d < -W0) {
+      if (now - lastAccept < 0.075) { spawnBubble(x, y, 'soft', null, 0.5); return; }  // aynı anda birden çok parmak
       cnt.stray++; score = Math.max(0, score - 50);
       breakCombo('ERKEN', x, y);
       spawnBubble(x, y, 'stray');
@@ -279,41 +294,63 @@
       return;
     }
     const tp = song.taps[k];
-    // saat: geç kaldıysa beklediği yerden şimdi yeniden akar; erken basışta saate dokunulmaz
-    if (waiting(now)) { clock.ctx0 = now; clock.pos0 = tp.t; }
     endHold(now, true);
-    k++; lastAccept = now;
-    // ses: hemen
-    stopVoice(0.008);
-    const to = k < song.taps.length ? song.taps[k].t - PRE : song.duration;
-    playRange(tp.t - PRE, to, now + 0.001);
-    // puan
-    const ad = Math.abs(d);
-    let grade = ad <= 0.045 ? 'p' : ad <= 0.09 ? 'gr' : d < 0 || d <= 0.15 ? 'go' : 'late';
+    k++; lastAccept = now; missStreak = 0;
+    unduck();
+    // puan: merkeze yakınlık (0 = tam merkez, 1 = çerçeve kenarı)
+    const fr = clamp(Math.abs(d) / W0, 0, 1), power = 1 - fr;
+    const grade = fr <= 0.2 ? 'p' : fr <= 0.45 ? 'gr' : fr <= 0.75 ? 'go' : 'ok';
+    cnt[grade]++; combo++; maxCombo = Math.max(maxCombo, combo);
     const m = mult();
-    if (grade === 'late') { cnt.late++; score += 30; breakCombo('GEÇ', x, y); }
-    else {
-      cnt[grade]++; combo++; maxCombo = Math.max(maxCombo, combo);
-      score += (grade === 'p' ? 300 : grade === 'gr' ? 200 : 100) * m;
-      if (grade === 'p' && tp.kind !== 'drum') floaters.push({ text: 'MÜKEMMEL', x, y: y - 70 * SC, t0: nowS(), col: '#fffbe0', size: 14 });
-      milestone();
-    }
-    if (missFlag === k - 1) missFlag = -1;
-    // sesin türüne göre his
+    const pts = ({ p: 500, gr: 300, go: 150, ok: 60 })[grade] * m;
+    score += pts;
+    const label = ({ p: 'TAM MERKEZ', gr: 'HARİKA', go: 'İYİ', ok: 'TAMAM' })[grade];
+    floaters.push({ text: label + (grade === 'p' ? ' +' + pts : ''), x, y: y - 74 * SC, t0: nowS(), col: grade === 'p' ? '#fff3a0' : grade === 'gr' ? '#fffbe6' : '#e6f6ff', size: 11 + 6 * power });
+    if (grade === 'p') { flash = Math.max(flash, 0.09); centerBurst(x, y, tp); }
+    milestone();
+    // sesin türüne göre his; coşku merkeze yakınlıkla büyür
     if (tp.kind === 'drum') {
-      drumHit(x, y, tp.sub, grade);
+      drumHit(x, y, tp.sub, power);
     } else if (tp.kind === 'hold') {
       hold = { pid, idx: k - 1, tStart: now, dur: tp.dur, x, y, path: [{ x, y, t: nowS() }], held: 0, slide: 0, done: false, h: TH().hue[(rnd() * 3) | 0], glyph: GLYPHS[(rnd() * 4) | 0], t0: nowS() };
-      addRipple(x, y, 0.7);
-      vis.pulse = Math.min(1, vis.pulse + 0.4);
+      addRipple(x, y, 0.5 + 0.6 * power);
+      vis.pulse = Math.min(1, vis.pulse + 0.3 + 0.3 * power);
       if (!holdHinted) { holdHinted = true; showTapHint('hold'); }
     } else {
-      spawnBubble(x, y, grade, tp);
-      addRipple(x, y, grade === 'p' ? 1 : grade === 'late' ? 0.5 : 0.8);
-      vis.pulse = Math.min(1, vis.pulse + 0.5 + 0.4 * tp.s);
+      spawnBubble(x, y, grade, tp, power);
+      addRipple(x, y, 0.4 + 0.9 * power);
+      vis.pulse = Math.min(1, vis.pulse + 0.3 + 0.5 * power);
     }
     if (tp.kind !== 'hold') hideTapHint();
     updateHud();
+  }
+  // çerçevesi geçmiş noktalar kaçmış sayılır: şarkı kısılır; üst üste iki kaçışta durup bekler
+  function settleMisses(now, W0) {
+    while (running && k < song.taps.length && now - latMs / 1000 - hitCtx() > W0) {
+      if (missStreak === 0) resumeIdx = k;
+      cnt.miss++; missStreak++; score = Math.max(0, score - 100);
+      breakCombo('KAÇTI', CX, H * 0.62);
+      endHold(now, true);
+      k++;
+      duck();
+      if (missStreak >= 2) {
+        // iki vuruş geriden, ilk kaçırılan noktadan önce yeniden başlamak üzere dur
+        const back = song.taps[resumeIdx].t - 2 * beatLen();
+        stopVoice(0.25);
+        running = false; holdPos = Math.max(-0.5, back); k = resumeIdx; missStreak = 0;
+        beatCur = 0; while (beatCur < song.beats.length && song.beats[beatCur] < holdPos + 0.01) beatCur++;
+        showTapHint();
+      }
+      updateHud();
+    }
+  }
+  // tam merkez: ekstra parıltı
+  function centerBurst(x, y, tp) {
+    const tn = nowS(), th = TH();
+    for (let i = 0; i < 14; i++) {
+      const an = (i / 14) * TAU + rnd() * 0.2, sp = (200 + rnd() * 140) * SC;
+      drops.push({ x, y, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, t0: tn, life: 0.5 + rnd() * 0.3, s: (2.5 + rnd() * 3) * SC, h: th.hue[i % 3] + rnd() * 30, al: 1 });
+    }
   }
   // ---- basılı tutma ----
   function moveHold(x, y, pid) {
@@ -342,8 +379,8 @@
       spawnBubble(h.x, h.y, 'p');
       addRipple(h.x, h.y, 1);
     } else {
-      // erken bırakıldı: ses o an yumuşakça kesilir
-      if (voice) stopVoice(0.12);
+      // erken bırakıldı: şarkı kısılır, sonraki isabette yeniden açılır
+      duck();
       score += Math.round(ratio * 120 * m);
       if (ratio < 0.4) breakCombo('ERKEN BIRAKTIN', h.x, h.y);
       else floaters.push({ text: 'KISA', x: h.x, y: h.y - 70 * SC, t0: nowS(), col: '#d8f6ff', size: 13 });
@@ -354,14 +391,14 @@
   // ---- davul vuruşu ----
   const rings = [];
   let shake = 0;
-  function drumHit(x, y, sub, grade) {
+  function drumHit(x, y, sub, power) {
     const kick = sub === 'kick', tn = nowS(), th = TH();
     const h = th.hue[kick ? 0 : 1] + (rnd() - 0.5) * 20;
-    rings.push({ x, y, t0: tn, kick, h, s: grade === 'p' ? 1.15 : 1, seed: rnd() * TAU });
+    rings.push({ x, y, t0: tn, kick, h, s: 0.6 + 0.65 * power, seed: rnd() * TAU });
     if (rings.length > 24) rings.shift();
-    addRipple(x, y, kick ? 1.7 : 1.0);
-    if (kick) { vis.punch = 1; shake = Math.max(shake, 7); vib(18); }
-    else { vis.punch = Math.max(vis.punch, 0.35); shake = Math.max(shake, 2.5); vib(8); }
+    addRipple(x, y, (kick ? 1.7 : 1.0) * (0.45 + 0.55 * power));
+    if (kick) { vis.punch = Math.max(vis.punch, 0.4 + 0.6 * power); shake = Math.max(shake, 2 + 6 * power); vib(18); }
+    else { vis.punch = Math.max(vis.punch, 0.15 + 0.25 * power); shake = Math.max(shake, 1 + 2 * power); vib(8); }
     vis.pulse = Math.min(1, vis.pulse + 0.6);
   }
   function vib(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
@@ -466,10 +503,11 @@
   }
 
   // ================= BALONCUKLAR =================
-  function spawnBubble(x, y, kind, tp) {
+  function spawnBubble(x, y, kind, tp, power) {
     const th = TH(), soft = kind === 'soft', stray = kind === 'stray';
     const h = th.hue[(rnd() * 3) | 0] + (rnd() - 0.5) * 40;
-    const base = soft ? 24 : stray ? 20 : kind === 'p' ? 42 : 36;
+    const pw = power == null ? 0.8 : power;
+    const base = soft ? 24 : stray ? 20 : 26 + 22 * pw;   // merkeze yakınlık = daha büyük baloncuk
     bubbles.push({
       x, y, t0: nowS(), h, r: base * SC * (0.9 + rnd() * 0.25), glyph: GLYPHS[(rnd() * 4) | 0],
       life: stray ? 0.5 : 1.0, popAt: stray ? 0.22 : 0.6, dim: stray ? 0.4 : soft ? 0.7 : 1,
@@ -702,7 +740,7 @@
       let al = doneTap ? clamp(1 - (fb - tp.fb) / 0.6, 0, 1) : 1;
       if (al <= 0) continue;
       const pop = doneTap ? 1 + (1 - al) * 0.8 : 1 + near * 0.35;
-      const r = 13 * SC * pop;
+      const r = 12 * SC * pop;
       g.save(); g.globalAlpha = al * (doneTap ? 0.7 : 1);
       if (tp.kind === 'hold') {
         const xe = X(beatAt(tp.t + tp.dur));
@@ -728,12 +766,14 @@
         bubbleBody(x, y, r, r, h, 1, tn);
         glyph('♪', x, y, r * 0.95, 1, h, 0);
       }
-      // sıradaki: etrafında atan halka
-      if (isNext) {
-        const wv = waiting(ctx.currentTime) ? 0.5 + 0.5 * Math.sin(tn * 12) : near;
-        g.globalAlpha = 0.35 + 0.65 * wv;
-        g.lineWidth = 2.5 * SC; g.strokeStyle = light ? '#fff' : 'hsl(' + h + ',100%,80%)';
-        g.beginPath(); g.arc(x, y, r + 5 * SC + 3 * SC * wv, 0, TAU); g.stroke();
+      // çerçeve: isabet alanı. Işık bu halkanın içindeyken basmak şarkıyı kesmez.
+      if (!doneTap) {
+        const wv = isNext ? (waiting() ? 0.5 + 0.5 * Math.sin(tn * 12) : near) : 0;
+        const fr = winPx() * (doneTap ? pop : 1);
+        g.globalAlpha = isNext ? 0.45 + 0.55 * wv : 0.28;
+        g.lineWidth = (isNext ? 2.5 : 1.2) * SC; g.strokeStyle = light ? '#fff' : 'hsl(' + h + ',100%,80%)';
+        g.beginPath(); g.arc(x, y, fr, 0, TAU); g.stroke();
+        if (isNext) { g.globalAlpha = 0.6; g.fillStyle = light ? '#fff' : 'hsl(' + h + ',100%,85%)'; g.fillRect(x - 0.75, y - fr - 4 * SC, 1.5, 4 * SC); g.fillRect(x - 0.75, y + fr, 1.5, 4 * SC); }
       }
       g.restore();
     }
@@ -758,8 +798,7 @@
     if (song && state === 'play' && ctx) {
       const now = ctx.currentTime;
       if (!paused) tick(now);
-      const vp = voicePos(now - (ctx.outputLatency || ctx.baseLatency || 0));
-      flowing = !!voice && now < voice.endCtx;
+      flowing = running && !ducked;
       // metronom: spiral şarkının her vuruşunda atar (şarkı beklerken susar). Ölçü başı daha güçlü.
       const cHeard = clockPos(now - (ctx.outputLatency || ctx.baseLatency || 0)), bts = song.beats;
       while (beatCur < bts.length && bts[beatCur] <= cHeard) {
@@ -777,7 +816,7 @@
         breathT = (kind === 'drum' ? x * x * x : smooth(x)) * amp;   // davulda gerilim sona doğru birden artar
         drumT = kind === 'drum' ? x * x : 0;
         holdT = kind === 'hold' ? smooth(x) * 0.6 : 0;
-        if (waiting(now)) { breathT = 1; waitT = clamp((now - hitCtx()) / 0.3, 0, 1); }
+        if (waiting()) { breathT = 1; waitT = 1; }
       }
       $('#prog i').style.width = (clamp(clockPos(now) / song.duration, 0, 1) * 100).toFixed(2) + '%';
     }
@@ -823,14 +862,8 @@
   }
   function tick(now) {
     if (hold && !hold.done && now >= hold.tStart + hold.dur) endHold(now, false);
-    if (k < song.taps.length) {
-      if (waiting(now) && now - hitCtx() > 0.6 && missFlag !== k) {
-        missFlag = k; cnt.miss++; score = Math.max(0, score - 100);
-        breakCombo('KAÇTI', CX, CY);
-        showTapHint();
-        updateHud();
-      }
-    } else if (!finishAt && (!voice || now >= voice.endCtx)) finishAt = now;
+    if (k < song.taps.length) settleMisses(now, winSec());
+    else if (!finishAt && running && clockPos(now) >= song.duration - 0.02) finishAt = now;
     if (finishAt && now - finishAt > 0.4) finish();
   }
 
@@ -870,12 +903,12 @@
     if (state !== 'play') return;
     state = 'result';
     const n = Math.max(1, song.taps.length);
-    const acc = (cnt.p + cnt.gr * 0.85 + cnt.go * 0.6 + cnt.late * 0.25) / n;
+    const acc = (cnt.p + cnt.gr * 0.85 + cnt.go * 0.65 + cnt.ok * 0.4) / n;
     const v = acc - (cnt.miss + cnt.stray * 0.5) / n;
     $('#rRank').textContent = v >= 0.95 ? 'S' : v >= 0.85 ? 'A' : v >= 0.7 ? 'B' : v >= 0.5 ? 'C' : 'D';
     const row = (a, b, c) => '<span' + (c ? ' class="big"' : '') + '>' + a + '</span><b' + (c ? ' class="big"' : '') + '>' + b + '</b>';
     $('#rStats').innerHTML = row('Puan', score.toLocaleString('tr-TR'), 1) + row('En uzun seri', maxCombo) +
-      row('Mükemmel', cnt.p) + row('Harika', cnt.gr) + row('İyi', cnt.go) + row('Geç', cnt.late) + row('Kaçan', cnt.miss) + row('Çok erken', cnt.stray) +
+      row('Tam merkez', cnt.p) + row('Harika', cnt.gr) + row('İyi', cnt.go) + row('Tamam', cnt.ok) + row('Kaçan', cnt.miss) + row('Boş dokunuş', cnt.stray) +
       row('Doğruluk', Math.round(clamp(acc, 0, 1) * 100) + '%');
     show('result');
   }
@@ -991,6 +1024,6 @@
     get state() { return state; }, get k() { return k; }, get song() { return song; }, get ctx() { return ctx; },
     get cnt() { return cnt; }, get score() { return score; }, get gl() { return !!gl; }, get vis() { return vis; },
     tap: onTap, release: (pid) => releaseHold(pid), move: (x, y, pid) => moveHold(x, y, pid), get hold() { return hold; }, demo: loadDemo, clockPos: () => clockPos(ctx.currentTime), hitCtx: () => hitCtx(),
-    voicePos: () => voicePos(ctx.currentTime)
+    winSec: () => winSec(), get running() { return running; }, get ducked() { return ducked; }
   };
 })();
