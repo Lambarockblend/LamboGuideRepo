@@ -26,7 +26,9 @@ body {
   font-family: var(--body); -webkit-tap-highlight-color: transparent;
   user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
-#cv { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; display: block; }
+#gl, #cv { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+#gl { z-index: 0; }
+#cv { z-index: 1; touch-action: none; }
 
 /* HUD */
 #hud {
@@ -114,6 +116,7 @@ h2 { margin: 0; font: 400 26px var(--display); }
 @media (prefers-reduced-motion: reduce) { #mult { transition: none; } }
 </style>
 
+<canvas id="gl" aria-hidden="true"></canvas>
 <canvas id="cv" aria-label="Oyun alanı: ekranın herhangi bir yerine dokun"></canvas>
 
 <div id="hud" class="off">
@@ -126,7 +129,7 @@ h2 { margin: 0; font: 400 26px var(--display); }
 <div class="ov" id="home">
   <div class="card">
     <h1>Dokun<span class="dot">·</span>Çal</h1>
-    <p class="lead">Şarkıyı sen çalarsın. Her dokunuş sıradaki sesi açar. Zamanında bas, şarkı hiç durmadan aksın.</p>
+    <p class="lead">Şarkıyı sen çalarsın. Ekranın neresine dokunursan dokun, şarkının sıradaki sesi çıkar. Doğru akışla çal, şarkı hiç durmadan aksın.</p>
     <button class="btn" id="pick">Şarkı seç</button>
     <button class="btn ghost" id="demo">Örnek parçayla dene</button>
     <div class="err" id="err"></div>
@@ -154,9 +157,9 @@ h2 { margin: 0; font: 400 26px var(--display); }
     <div class="row"><button class="btn ghost" id="restart">Baştan</button><button class="btn ghost" id="newSong">Yeni şarkı</button></div>
     <div class="label">Tema</div>
     <div class="chips" id="chips2"></div>
-    <div class="label">Ses gecikmesi</div>
-    <div class="range"><input type="range" id="lat" min="-80" max="200" step="5" value="0" aria-label="Ses gecikmesi düzeltmesi"><output id="latO">0 ms</output></div>
-    <p class="hint">Hep "GEÇ" ya da hep "ERKEN" alıyorsan bunu kaydır. Bluetooth kulaklıkta genelde 120 ile 180 ms arası iyi gelir.</p>
+    <div class="label">Zamanlama düzeltmesi</div>
+    <div class="range"><input type="range" id="lat" min="-80" max="200" step="5" value="0" aria-label="Zamanlama düzeltmesi"><output id="latO">0 ms</output></div>
+    <p class="hint">Hep "GEÇ" alıyorsan sağa, hep "ERKEN" alıyorsan sola kaydır.</p>
   </div>
 </div>
 
